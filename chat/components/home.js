@@ -40,7 +40,19 @@ class Home extends Component {
             onPress={() => this.props.navigator.push({name: 'signup'})}>
             Signup
           </Button>
-        </View>); 
+          <Button
+            style={styles.button}
+            textStyle={styles.buttonText}
+            onPress={() => this.props.navigator.push({name: 'stream'})}>
+            Stream
+          </Button>
+          <Button
+            style={styles.button}
+            textStyle={styles.buttonText}
+            onPress={() => this.props.navigator.push({name: 'map'})}>
+            MAP
+          </Button>
+        </View>);
     }
 
     return (
@@ -59,6 +71,12 @@ class Home extends Component {
           textStyle={styles.buttonText}
           onPress={() => this.props.navigator.push({name: 'rooms'})}>
           Chat rooms
+        </Button>
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.props.navigator.push({name: 'stream'})}>
+          Stream
         </Button>
         <Button
           style={styles.button}

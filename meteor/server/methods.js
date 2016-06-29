@@ -26,6 +26,7 @@ Meteor.methods({
     });
   },
   'updateLocation': function (location) {
+    location.timestamp = Math.floor(location.timestamp); 
     const userId = Meteor.userId();
     if (!userId) {
       return;
