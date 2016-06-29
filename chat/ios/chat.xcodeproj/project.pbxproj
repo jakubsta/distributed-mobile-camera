@@ -34,6 +34,7 @@
 		36615F271D2433AE0064DF09 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F261D2433AE0064DF09 /* libsqlite3.tbd */; };
 		36615F291D2433B80064DF09 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F281D2433B80064DF09 /* libstdc++.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		B8F5F57AEF34452FBD77F0A1 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C66D0C7C0A44A8884AA1D95 /* libRCTVideo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,13 @@
 			remoteGlobalIDString = 35A2221F1CB493700015FD5C;
 			remoteInfo = RCTWebRTC;
 		};
+		36A2F4F11D24715300BCFF2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8E3294F8FA6E4149BD5BB2FD /* RCTVideo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTVideo;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -140,6 +148,7 @@
 		00E356EE1AD99517003FC87E /* chatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* chatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = chatTests.m; sourceTree = "<group>"; };
+		0C66D0C7C0A44A8884AA1D95 /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -164,6 +173,7 @@
 		36615F281D2433B80064DF09 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		8E3294F8FA6E4149BD5BB2FD /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 		9462541618CF4294B9E30618 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		F15CCF2E33774F869C318E7E /* libAirMaps.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAirMaps.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -201,6 +211,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				231519307C8C40E3ABFCD26C /* libAirMaps.a in Frameworks */,
+				B8F5F57AEF34452FBD77F0A1 /* libRCTVideo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +321,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		36A2F4E51D24715300BCFF2A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				36A2F4F21D24715300BCFF2A /* libRCTVideo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -334,6 +353,7 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				9462541618CF4294B9E30618 /* AirMaps.xcodeproj */,
+				8E3294F8FA6E4149BD5BB2FD /* RCTVideo.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -492,6 +512,10 @@
 					ProjectRef = 00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */;
 				},
 				{
+					ProductGroup = 36A2F4E51D24715300BCFF2A /* Products */;
+					ProjectRef = 8E3294F8FA6E4149BD5BB2FD /* RCTVideo.xcodeproj */;
+				},
+				{
 					ProductGroup = 36615F051D2432920064DF09 /* Products */;
 					ProjectRef = 36615F041D2432920064DF09 /* RCTWebRTC.xcodeproj */;
 				},
@@ -574,6 +598,13 @@
 			fileType = archive.ar;
 			path = libRCTWebRTC.a;
 			remoteRef = 36615F121D2432920064DF09 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		36A2F4F21D24715300BCFF2A /* libRCTVideo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTVideo.a;
+			remoteRef = 36A2F4F11D24715300BCFF2A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
@@ -693,6 +724,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -713,6 +745,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -732,6 +765,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-video",
 				);
 				INFOPLIST_FILE = chat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -760,6 +794,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-video",
 				);
 				INFOPLIST_FILE = chat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -815,6 +850,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-video",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -856,6 +892,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/AirMaps/**",
+					"$(SRCROOT)/../node_modules/react-native-video",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

@@ -120,6 +120,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-video')
     compile project(':WebRTCModule')
     compile 'com.airbnb.android:react-native-maps:0.6.0'
     compile fileTree(dir: "libs", include: ["*.jar"])
