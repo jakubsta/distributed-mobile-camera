@@ -19,16 +19,13 @@ class Chat extends Component {
 
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      var initialPosition = JSON.stringify(position);
-      this.setState({initialPosition});
-    },
-    (error) => alert(error.message),
-    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
-    this.watchID = navigator.geolocation.watchPosition((position) => {
-      var lastPosition = JSON.stringify(position);
+    setInterval(() => {
+      navigator.geolocation.getCurrentPosition((position) => {
       Meteor.call('updateLocation', position)
-    });
+    },
+    (error) => {},
+    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
+    }, 10000);
   }
 
   render() {
