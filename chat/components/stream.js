@@ -286,7 +286,7 @@ class Stream extends Component {
     return (
       <View style={styles.container}>
         {this.showMessage.apply(this)}
-        <RTCView streamURL={this.state.videoURL} style={styles.video}/>
+        <RTCView streamURL={this.state.selfViewSrc} style={styles.video}/>
       </View>
     );
   }
