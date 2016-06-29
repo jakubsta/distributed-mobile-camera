@@ -42,7 +42,6 @@ class Chat extends Component {
   }
 
   renderScene(route, navigator) {
-    console.log('test!!!');
     switch(route.name) {
       case 'home':
         return <Home navigator={navigator} {...route.passProps}/>;
@@ -55,7 +54,6 @@ class Chat extends Component {
       case 'posts':
         return <Posts {...route.passProps}/>;
       case 'map':
-        console.log('test');
         return <Map navigator={navigator} {...route.passProps} />;
     }
   }

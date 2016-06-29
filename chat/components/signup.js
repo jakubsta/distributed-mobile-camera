@@ -25,12 +25,10 @@ class Signup extends Component {
 
   createAccount() {
     Accounts.createUser(Object.assign({}, this.state), (error) => {
-      console.log(error);
       if (error) {
         return this.setState({status: 'error', message: error.reason});
       }
       Meteor.loginWithPassword({email: this.state.email}, this.state.password, (error) => {
-        console.log(error);
         if (error) {
           return this.setState({status: 'error', message: error.reason});
         }
