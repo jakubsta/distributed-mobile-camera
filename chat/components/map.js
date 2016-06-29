@@ -11,6 +11,16 @@ import {
 import MapView from 'react-native-maps';
 
 export default class Map extends Component {
+
+  fakeMarkers = [{
+    coordinates: {
+      latitude: 37.78825,
+      longitude: -122.4324
+    },
+    title: 'title 1',
+    description: 'description 1'
+  }];
+
   constructor() {
     super();
   }
@@ -23,8 +33,16 @@ export default class Map extends Component {
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
-      }}
-    /></View>);
+              }}>
+      {this.fakeMarkers.map(marker => (
+        <MapView.Marker
+          coordinate={marker.coordinates}
+          title={marker.title}
+          description={marker.description}
+        />
+      ))}
+    </MapView>
+    </View>);
   }
 }
 
