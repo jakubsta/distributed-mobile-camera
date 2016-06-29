@@ -16,6 +16,7 @@
     "react-native-maps": "^0.6.0",
     "react-native-meteor": "1.0.0-rc7",
     "react-native-webrtc": "^0.8.0",
-    "react-timeout": "1.0.0"
+    "react-timeout": "1.0.0",
+    "socket.io-client": "^1.4.6"
   }
 }
