@@ -205,10 +205,8 @@ function setSocket() {
   });
 
   socket.on('connect', function (data) {
-    console.log('connect');
-    getLocalStream(true, function (stream) {
+    getLocalStream(false, function (stream) {
       localStream = stream;
-      console.log(stream)
       container.setState({selfViewSrc: stream.toURL()});
       container.setState({status: 'ready', info: 'Please enter or create room ID'});
     });
@@ -237,16 +235,12 @@ function getStats() {
   var pc = pcPeers[Object.keys(pcPeers)[0]];
   if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
     var track = pc.getRemoteStreams()[0].getAudioTracks()[0];
-    console.log('track', track);
     pc.getStats(track, function(report) {
-      console.log('getStats report', report);
     }, logError);
   }
 }
 
 var container;
-
-
 
 class Stream extends Component {
 
@@ -308,10 +302,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   video: {
-    width: 300,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'stretch',
+    alignItems: 'stretch'
   },
   message: {
     backgroundColor: '#E0E0E0',
