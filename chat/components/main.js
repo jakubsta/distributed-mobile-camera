@@ -15,10 +15,25 @@ import Rooms from './rooms';
 import Posts from './posts';
 
 class Chat extends Component {
+
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      var initialPosition = JSON.stringify(position);
+      this.setState({initialPosition});
+    },
+    (error) => alert(error.message),
+    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      var lastPosition = JSON.stringify(position);
+      console.log(lastPosition)
+    });
+  }
+
   render() {
     if(!this.props.connected) {
       return (<Text>Connecting to the server</Text>);
-    } 
+    }
 
     return (
       <Navigator
@@ -36,7 +51,7 @@ class Chat extends Component {
         return <Login navigator={navigator} {...route.passProps}/>;
       case 'signup':
         return <Signup navigator={navigator} {...route.passProps}/>;
-      case 'rooms': 
+      case 'rooms':
         return <Rooms navigator={navigator}/>;
       case 'posts':
         return <Posts {...route.passProps}/>
@@ -44,7 +59,7 @@ class Chat extends Component {
   }
 
   configureScene(route, routeStack) {
-     return Navigator.SceneConfigs.PushFromRight 
+     return Navigator.SceneConfigs.PushFromRight
   }
 }
 
