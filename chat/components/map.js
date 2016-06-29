@@ -2,24 +2,14 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View,
-  Modal,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 
 import Meteor, { createContainer } from 'react-native-meteor';
 import MapView from 'react-native-maps';
+import Button from 'apsl-react-native-button';
 
 class Map extends Component {
-  fakeMarkers = [{
-    coordinates: {
-      latitude: 37.78825,
-      longitude: -122.4324
-    },
-    title: 'title 1',
-    description: 'description 1'
-  }];
 
   constructor() {
     super();
@@ -47,14 +37,29 @@ class Map extends Component {
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
         title={user.name}
-        description="my description">
+        description="my description"
+        onLongPress={this.openAddChallengeModal.bind(this)}>
         <MapView.Callout>
           <View>
-            <Text>This is a plain view</Text>
+            <Text>Add sharing request</Text>
+            <Button
+              style={styles.button}
+              textStyle={styles.buttonText}
+              onPress={this.onUserIconClick.call(this, user)}>
+              Request video
+            </Button>
           </View>
         </MapView.Callout>
       </MapView.Marker>
     ))
+  }
+
+  onUserIconClick(user) {
+    console.log("ping user: ", user);
+  }
+
+  openAddChallengeModal(event) {
+    console.log("long press event: ", event);
   }
 }
 
@@ -73,5 +78,16 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: '#2980b9',
+    backgroundColor: '#3498db',
+    height: 40,
+    margin: 10,
+    padding: 10
+  },
+  buttonText: {
+    color: 'white'
   }
 });
