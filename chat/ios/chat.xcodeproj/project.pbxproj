@@ -23,6 +23,16 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		231519307C8C40E3ABFCD26C /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F15CCF2E33774F869C318E7E /* libAirMaps.a */; };
 		36615F071D2432920064DF09 /* libjingle_peerconnection in Resources */ = {isa = PBXBuildFile; fileRef = 36615F031D2432920064DF09 /* libjingle_peerconnection */; };
+		36615F171D24334C0064DF09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F161D24334C0064DF09 /* AVFoundation.framework */; };
+		36615F191D2433680064DF09 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F181D2433680064DF09 /* AudioToolbox.framework */; };
+		36615F1B1D2433710064DF09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F1A1D2433710064DF09 /* CoreGraphics.framework */; };
+		36615F1D1D24337A0064DF09 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F1C1D24337A0064DF09 /* GLKit.framework */; };
+		36615F1F1D2433870064DF09 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F1E1D2433870064DF09 /* CoreAudio.framework */; };
+		36615F211D2433920064DF09 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F201D2433920064DF09 /* CoreVideo.framework */; };
+		36615F231D24339B0064DF09 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F221D24339B0064DF09 /* VideoToolbox.framework */; };
+		36615F251D2433A60064DF09 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F241D2433A60064DF09 /* libc.tbd */; };
+		36615F271D2433AE0064DF09 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F261D2433AE0064DF09 /* libsqlite3.tbd */; };
+		36615F291D2433B80064DF09 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 36615F281D2433B80064DF09 /* libstdc++.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -142,6 +152,16 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		36615F031D2432920064DF09 /* libjingle_peerconnection */ = {isa = PBXFileReference; lastKnownFileType = folder; name = libjingle_peerconnection; path = "../node_modules/react-native-webrtc/ios/libjingle_peerconnection"; sourceTree = "<group>"; };
 		36615F041D2432920064DF09 /* RCTWebRTC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebRTC.xcodeproj; path = "../node_modules/react-native-webrtc/ios/RCTWebRTC.xcodeproj"; sourceTree = "<group>"; };
+		36615F161D24334C0064DF09 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		36615F181D2433680064DF09 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		36615F1A1D2433710064DF09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		36615F1C1D24337A0064DF09 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		36615F1E1D2433870064DF09 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		36615F201D2433920064DF09 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		36615F221D24339B0064DF09 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		36615F241D2433A60064DF09 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
+		36615F261D2433AE0064DF09 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		36615F281D2433B80064DF09 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		9462541618CF4294B9E30618 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
@@ -160,6 +180,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36615F291D2433B80064DF09 /* libstdc++.tbd in Frameworks */,
+				36615F271D2433AE0064DF09 /* libsqlite3.tbd in Frameworks */,
+				36615F251D2433A60064DF09 /* libc.tbd in Frameworks */,
+				36615F231D24339B0064DF09 /* VideoToolbox.framework in Frameworks */,
+				36615F211D2433920064DF09 /* CoreVideo.framework in Frameworks */,
+				36615F1F1D2433870064DF09 /* CoreAudio.framework in Frameworks */,
+				36615F1D1D24337A0064DF09 /* GLKit.framework in Frameworks */,
+				36615F1B1D2433710064DF09 /* CoreGraphics.framework in Frameworks */,
+				36615F191D2433680064DF09 /* AudioToolbox.framework in Frameworks */,
+				36615F171D24334C0064DF09 /* AVFoundation.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -319,6 +349,16 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				36615F281D2433B80064DF09 /* libstdc++.tbd */,
+				36615F261D2433AE0064DF09 /* libsqlite3.tbd */,
+				36615F241D2433A60064DF09 /* libc.tbd */,
+				36615F221D24339B0064DF09 /* VideoToolbox.framework */,
+				36615F201D2433920064DF09 /* CoreVideo.framework */,
+				36615F1E1D2433870064DF09 /* CoreAudio.framework */,
+				36615F1C1D24337A0064DF09 /* GLKit.framework */,
+				36615F1A1D2433710064DF09 /* CoreGraphics.framework */,
+				36615F181D2433680064DF09 /* AudioToolbox.framework */,
+				36615F161D24334C0064DF09 /* AVFoundation.framework */,
 				13B07FAE1A68108700A75B9A /* chat */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* chatTests */,
@@ -696,6 +736,7 @@
 				INFOPLIST_FILE = chat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/**";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -722,6 +763,7 @@
 				INFOPLIST_FILE = chat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/**";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
