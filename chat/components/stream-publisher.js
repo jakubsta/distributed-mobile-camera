@@ -16,8 +16,8 @@ if (!window.navigator.userAgent) {
 
 var io = require('socket.io-client/socket.io');
 
-var socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
-
+var socket;
+let roomId = 'aaa';
 
 import {
   RTCPeerConnection,
@@ -195,6 +195,7 @@ function leave(socketId) {
   container.setState({info: 'One peer leave!'});
 }
 function setSocket() {
+
   var socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
 
   socket.on('exchange', function (data) {
@@ -203,14 +204,17 @@ function setSocket() {
   socket.on('leave', function (socketId) {
     leave(socketId);
   });
-
-  socket.on('connect', function (data) {
-    getLocalStream(false, function (stream) {
-      localStream = stream;
-      container.setState({selfViewSrc: stream.toURL()});
-      container.setState({status: 'ready', info: 'Please enter or create room ID'});
+  let promise = new Promise((resolve, reject) => {
+    socket.on('connect', function (data) {
+      resolve();
+      getLocalStream(false, function (stream) {
+        localStream = stream;
+        container.setState({selfViewSrc: stream.toURL()});
+        container.setState({status: 'ready', info: 'Please enter or create room ID'});
+      });
     });
   });
+  return promise;
 }
 function logError(error) {
   console.log("logError", error);
@@ -263,7 +267,9 @@ class StreamPublisher extends Component {
 
   componentDidMount() {
     container = this;
-    setSocket();
+    setSocket().then(()=>{
+      join(roomId);
+    });
   }
 
   clearMessage() {

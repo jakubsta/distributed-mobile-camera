@@ -16,8 +16,8 @@ if (!window.navigator.userAgent) {
 
 var io = require('socket.io-client/socket.io');
 
-var socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
-
+var socket;
+var roomId = 'aaa';
 
 import {
   RTCPeerConnection,
@@ -36,6 +36,7 @@ var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 
 var pcPeers = {};
 var localStream;
+let remoteStream;
 
 function getLocalStream(isFront, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
@@ -113,13 +114,9 @@ function createPC(socketId, isOffer) {
   };
 
   pc.onaddstream = function (event) {
-    console.log('onaddstream', event.stream);
     container.setState({info: 'One peer join!'});
     peerConnected();
-
-    var remoteList = container.state.remoteList;
-    remoteList[socketId] = event.stream.toURL();
-    container.setState({ remoteList: remoteList });
+    remoteStream = event.stream.toURL();
   };
   pc.onremovestream = function (event) {
     console.log('onremovestream', event.stream);
@@ -204,13 +201,17 @@ function setSocket() {
     leave(socketId);
   });
 
-  socket.on('connect', function (data) {
-    getLocalStream(false, function (stream) {
-      localStream = stream;
-      container.setState({selfViewSrc: stream.toURL()});
-      container.setState({status: 'ready', info: 'Please enter or create room ID'});
+  let promise = new Promise((resolve, reject) => {
+    socket.on('connect', function (data) {
+      resolve();
+      getLocalStream(false, function (stream) {
+        localStream = stream;
+        container.setState({selfViewSrc: stream.toURL()});
+        container.setState({status: 'ready', info: 'Please enter or create room ID'});
+      });
     });
   });
+  return promise;
 }
 function logError(error) {
   console.log("logError", error);
@@ -263,7 +264,9 @@ class StreamSubscriber extends Component {
 
   componentDidMount() {
     container = this;
-    setSocket();
+    setSocket().then(()=>{
+      join(roomId);
+    });
   }
 
   clearMessage() {
@@ -280,12 +283,22 @@ class StreamSubscriber extends Component {
       </View>
     );
   }
+  renderRemote(remoteStream){
+    if(remoteStream) {
+      return (<RTCView streamURL={remoteStream} style={styles.video}/>)
+    } else {
+      return (<View>
+        <Text style={{fontWeight: 'bold'}}>
+          Connecting...
+        </Text>
+      </View>)
+    }
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        {this.showMessage.apply(this)}
-        <RTCView streamURL={this.state.selfViewSrc} style={styles.video}/>
+        {this.renderRemote(remoteStream)}
       </View>
     );
   }
