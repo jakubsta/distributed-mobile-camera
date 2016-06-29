@@ -194,23 +194,26 @@ function leave(socketId) {
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
 }
+function setSocket() {
+  var socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
 
-socket.on('exchange', function(data){
-  exchange(data);
-});
-socket.on('leave', function(socketId){
-  leave(socketId);
-});
-
-socket.on('connect', function(data) {
-  console.log('connect');
-  getLocalStream(true, function(stream) {
-    localStream = stream;
-    container.setState({selfViewSrc: stream.toURL()});
-    container.setState({status: 'ready', info: 'Please enter or create room ID'});
+  socket.on('exchange', function (data) {
+    exchange(data);
   });
-});
+  socket.on('leave', function (socketId) {
+    leave(socketId);
+  });
 
+  socket.on('connect', function (data) {
+    console.log('connect');
+    getLocalStream(true, function (stream) {
+      localStream = stream;
+      console.log(stream)
+      container.setState({selfViewSrc: stream.toURL()});
+      container.setState({status: 'ready', info: 'Please enter or create room ID'});
+    });
+  });
+}
 function logError(error) {
   console.log("logError", error);
 }
@@ -266,6 +269,7 @@ class Stream extends Component {
 
   componentDidMount() {
     container = this;
+    setSocket();
   }
 
   clearMessage() {
