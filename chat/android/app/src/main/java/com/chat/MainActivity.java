@@ -2,7 +2,6 @@ package com.chat;
 
 import com.facebook.react.ReactActivity;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
