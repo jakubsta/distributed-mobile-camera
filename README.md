@@ -1,4 +1,4 @@
-Chat - React Native with Meteor
+Areola - Distributed Mobile Camera (with React Native and Meteor)
 ===============================
 
 ### Requirements:
