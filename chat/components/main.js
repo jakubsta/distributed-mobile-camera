@@ -26,7 +26,7 @@ class Chat extends Component {
     {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
     this.watchID = navigator.geolocation.watchPosition((position) => {
       var lastPosition = JSON.stringify(position);
-      console.log(lastPosition)
+      Meteor.call('updateLocation', position)
     });
   }
 
