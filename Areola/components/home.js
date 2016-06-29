@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 import Button from 'apsl-react-native-button';
+import Video from 'react-native-video';
 
 class Home extends Component {
   constructor() {
@@ -16,12 +17,30 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
+        {this.backgroundVideo()}
         {this.userActions()}
       </View>);
   }
 
   logout() {
     Meteor.logout();
+  }
+
+  backgroundVideo() {
+    return (!this.props.user) ?
+    (<Video
+      source={{uri: "backgroundMovie"}}
+      style={styles.fullScreen}
+      onLoad={() => { console.log('loaded!') }}
+      onProgress={this.onProgress}
+      onError={(err) => { console.log('error!', err) }}
+      onEnd={() => { console.log('ended!') }}
+      rate={1}
+      volume={1}
+      muted={true}
+      resizeMode="cover"
+      repeat={true}
+    />) : null;
   }
 
   userActions() {
@@ -107,9 +126,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
-    marginLeft: 20,
-    marginRight: 20,
-    backgroundColor: 'white'
+    backgroundColor: 'black'
+  },
+  fullScreen: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   button: {
     borderWidth: 1,
