@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 
 import {Rooms} from '../collections/rooms';
 import {Posts} from '../collections/posts';
-
+import Geohash from 'ngeohash';
 
 Meteor.methods({
   'addRoom': function (title, description) {
@@ -26,11 +26,14 @@ Meteor.methods({
     });
   },
   'updateLocation': function (location) {
-    location.timestamp = Math.floor(location.timestamp); 
     const userId = Meteor.userId();
     if (!userId) {
       return;
     }
+
+    location.timestamp = Math.floor(location.timestamp);
+    const precision = 9;
+    location.geohash = Geohash.encode(location.coords.latitude, location.coords.longitude, precision);
 
     Meteor.users.update(userId, {
       $set: {
