@@ -13,7 +13,8 @@ import Signup from './signup';
 import Home from './home';
 import Rooms from './rooms';
 import Posts from './posts';
-import Stream from './stream';
+import StreamPublisher from './stream-publisher';
+import StreamSubscriber from './stream-subscriber'
 import Map from './map';
 
 class Chat extends Component {
@@ -54,8 +55,10 @@ class Chat extends Component {
         return <Rooms navigator={navigator}/>;
       case 'posts':
         return <Posts {...route.passProps}/>;
-      case 'stream':
-        return <Stream navigator={navigator} {...route.passProps}/>;
+      case 'stream-publisher':
+        return <StreamPublisher navigator={navigator} {...route.passProps}/>;
+      case 'stream-subscriber':
+        return <StreamSubscriber navigator={navigator} {...route.passProps}/>;
       case 'map':
         return <Map navigator={navigator} {...route.passProps} />;
     }

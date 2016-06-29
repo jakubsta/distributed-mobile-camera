@@ -43,8 +43,14 @@ class Home extends Component {
           <Button
             style={styles.button}
             textStyle={styles.buttonText}
-            onPress={() => this.props.navigator.push({name: 'stream'})}>
-            Stream
+            onPress={() => this.props.navigator.push({name: 'stream-publisher'})}>
+            Stream Publisher
+          </Button>
+          <Button
+            style={styles.button}
+            textStyle={styles.buttonText}
+            onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}>
+            Stream Subscriber
           </Button>
           <Button
             style={styles.button}

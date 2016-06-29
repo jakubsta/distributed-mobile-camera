@@ -242,7 +242,7 @@ function getStats() {
 
 var container;
 
-class Stream extends Component {
+class StreamPublisher extends Component {
 
   constructor() {
     super();
@@ -291,7 +291,7 @@ class Stream extends Component {
   }
 }
 
-export default ReactTimeout(Stream);
+export default ReactTimeout(StreamPublisher);
 
 const styles = StyleSheet.create({
   container: {
