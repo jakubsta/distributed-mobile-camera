@@ -55,10 +55,8 @@ class Chat extends Component {
         return <Rooms navigator={navigator}/>;
       case 'posts':
         return <Posts {...route.passProps}/>;
-      case 'stream-publisher':
-        return <StreamPublisher navigator={navigator} {...route.passProps}/>;
-      case 'stream-subscriber':
-        return <StreamSubscriber navigator={navigator} {...route.passProps}/>;
+      case 'stream':
+        return <Stream navigator={navigator} {...route.passProps}/>;
       case 'map':
         return <Map navigator={navigator} {...route.passProps} />;
     }
