@@ -42,6 +42,9 @@ const LocationSchema = new SimpleSchema({
   },
   coords: {
     type: LocationCoordsSchema
+  },
+  geohash: {
+    type: String
   }
 });
 
