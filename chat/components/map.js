@@ -28,6 +28,7 @@ class Map extends Component {
   render() {
     return (<View style={styles.container}><MapView
       style={styles.map}
+      showsUserLocation={true}
       initialRegion={{
         latitude: 37.78825,
         longitude: -122.4324,
@@ -46,8 +47,13 @@ class Map extends Component {
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
         title={user.name}
-        description="my description"
-      />
+        description="my description">
+        <MapView.Callout>
+          <View>
+            <Text>This is a plain view</Text>
+          </View>
+        </MapView.Callout>
+      </MapView.Marker>
     ))
   }
 }
