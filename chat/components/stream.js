@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput
+  TextInput,
+  NativeModules
 } from 'react-native';
 import Meteor, { Accounts } from 'react-native-meteor';
 import Button from 'apsl-react-native-button';
