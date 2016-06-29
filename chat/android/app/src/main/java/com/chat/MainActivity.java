@@ -4,6 +4,7 @@ import com.facebook.react.ReactActivity;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.oney.WebRTCModule.WebRTCModulePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +37,7 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new WebRTCModulePackage(),
             new MapsPackage(this)
         );
     }
