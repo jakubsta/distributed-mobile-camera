@@ -44,8 +44,7 @@ class Map extends Component {
             <Text>Add sharing request</Text>
             <Button
               style={styles.button}
-              textStyle={styles.buttonText}
-              onPress={this.onUserIconClick.call(this, user)}>
+              textStyle={styles.buttonText}>
               Request video
             </Button>
           </View>
@@ -68,7 +67,7 @@ export default createContainer(() => {
 
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({})
+    users: []
   }
 }, Map)
 
