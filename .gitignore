@@ -26,6 +26,6 @@ Temporary Items
 .apdisk
 
 #ios config
-AppDelegate.m
+# AppDelegate.m
 chat/components/connect.js
 .idea
