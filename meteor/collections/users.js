@@ -54,6 +54,7 @@ const UserSchema = new SimpleSchema({
   'emails.$.verified': {type: Boolean},
   createdAt: {type: Date},
   services: {type: Object, blackbox: true},
+  username: {type: String, optional: true},
   location: {type: LocationSchema, optional: true}
 });
 
