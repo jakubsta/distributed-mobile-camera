@@ -13,6 +13,7 @@ import Signup from './signup';
 import Home from './home';
 import Rooms from './rooms';
 import Posts from './posts';
+import Map from './map';
 
 class Chat extends Component {
 
@@ -44,6 +45,7 @@ class Chat extends Component {
   }
 
   renderScene(route, navigator) {
+    console.log('test!!!');
     switch(route.name) {
       case 'home':
         return <Home navigator={navigator} {...route.passProps}/>;
@@ -54,7 +56,10 @@ class Chat extends Component {
       case 'rooms':
         return <Rooms navigator={navigator}/>;
       case 'posts':
-        return <Posts {...route.passProps}/>
+        return <Posts {...route.passProps}/>;
+      case 'map':
+        console.log('test');
+        return <Map navigator={navigator} {...route.passProps} />;
     }
   }
 

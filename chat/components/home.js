@@ -60,6 +60,12 @@ class Home extends Component {
           onPress={() => this.props.navigator.push({name: 'rooms'})}>
           Chat rooms
         </Button>
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.props.navigator.push({name: 'map'})}>
+          MAP
+        </Button>
       </View>);
   }
 }
