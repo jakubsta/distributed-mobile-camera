@@ -114,9 +114,12 @@ function createPC(socketId, isOffer) {
   };
 
   pc.onaddstream = function (event) {
-    container.setState({info: 'One peer join!'});
+    remoteStream = true;
+    console.log('stream added')
+    container.setState({remoteStream: event.stream.toURL()});
+    container.setState({remoteSocketId: socketId});
+
     peerConnected();
-    remoteStream = event.stream.toURL();
   };
   pc.onremovestream = function (event) {
     console.log('onremovestream', event.stream);
@@ -285,7 +288,7 @@ class StreamSubscriber extends Component {
   }
   renderRemote(remoteStream){
     if(remoteStream) {
-      return (<RTCView streamURL={remoteStream} style={styles.video}/>)
+      return (<RTCView key={this.state.remoteSocketId} streamURL={this.state.remoteStream} style={styles.video}/>)
     } else {
       return (<View>
         <Text style={{fontWeight: 'bold'}}>
@@ -298,7 +301,7 @@ class StreamSubscriber extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.renderRemote(remoteStream)}
+        {this.renderRemote(this.state.remoteStream)}
       </View>
     );
   }
