@@ -38,7 +38,6 @@ class Markers extends Component {
   }
 
   onUserIconClick(user) {
-    console.log("ping user: ", user, e);
     Meteor.call('updateUserStatus', 'requesting');
     Meteor.call('setUserAsRequested', user);
   }
