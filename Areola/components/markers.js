@@ -39,8 +39,9 @@ class Markers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("next Props", nextProps);
-
+    if (!nextProps.user) {
+      return;
+    }
     switch(nextProps.user.state){
       case 'requested':
         Alert.alert(
