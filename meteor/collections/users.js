@@ -58,7 +58,8 @@ const UserSchema = new SimpleSchema({
   createdAt: {type: Date},
   services: {type: Object, blackbox: true},
   username: {type: String, optional: true},
-  location: {type: LocationSchema, optional: true}
+  location: {type: LocationSchema, optional: true},
+  state: {type: String}
 });
 
 Meteor.users.attachSchema(UserSchema);

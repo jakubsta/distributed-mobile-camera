@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
   TouchableOpacity,
   Image
 } from 'react-native';
@@ -58,30 +59,51 @@ class Map extends Component {
     </View>);
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log("next Props", nextProps);
+    if (nextProps.user.state === 'requested') {
+      Alert.alert(
+        'Streaming request!',
+        'Someone is asking you to share your camera!',
+        [
+          {text: 'Decline', onPress: () => Meteor.call('updateUserStatus', 'free') },
+          {text: 'Share', onPress: () => {
+            Meteor.call('updateUserStatus', 'publishing');
+            this.props.navigator.push({name: 'stream-publisher'});
+
+          }}
+        ]
+      )
+    }
+  }
+
   renderPoints() {
     return this.props.users.map((user) => (
       <MapView.Marker
         key={user._id}
+        pinColor={user.state === 'streaming' ? 'green' : 'red'}
         coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
 
       >
-        <MapView.Callout style={{width:100, height:50}}>
+        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)}>
           <View>
-            <Text>Add sharing request</Text>
+            <Text>Press tooltip to ask for sharing</Text>
           </View>
         </MapView.Callout>
       </MapView.Marker>
     ))
   }
 
-  onMarkerPress(evt) {
-    console.log("on marker press", evt);
-  }
-
   onUserIconClick(user) {
-    console.log("ping user: ", user);
+    return e => {
+      console.log("ping user: ", user, e);
+      Meteor.call('updateUserStatus', 'requested', () => {
+        console.log("from asking callback");
+
+      })
+    };
   }
 
   openAddChallengeModal(event) {
@@ -92,25 +114,26 @@ class Map extends Component {
 
 export default createContainer(() => {
   const handler = Meteor.subscribe('users');
-
+  console.log("MY USER: ", Meteor.user());
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({location: {$exists: true}})
+    users: Meteor.collection('users').find({location: {$exists: true}}),
+    user: Meteor.user()
   }
 }, Map)
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   map: {
-    flex: 1,
+    flex: 1
   },
   buttonsContainer: {
     position: 'absolute',
     top: 0,
     right: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   logout: {
     position: 'absolute',
@@ -131,7 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 0,
     width: 35,
-    height: 35,
+    height: 35
   },
   buttonText: {
     backgroundColor: 'transparent',
@@ -145,5 +168,5 @@ const styles = StyleSheet.create({
       height: 2
     },
     opacity: 0.8
-  },
+  }
 });

@@ -25,6 +25,9 @@ Meteor.methods({
       submitDate: new Date(),
     });
   },
+  'updateUserStatus': function( newStatus) {
+    return Meteor.users.update({_id: Meteor.user()._id}, {$set: {state: newStatus}});
+  },
   'updateLocation': function (location) {
     const userId = Meteor.userId();
     if (!userId) {
