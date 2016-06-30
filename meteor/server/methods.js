@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 
 import {Rooms} from '../collections/rooms';
 import {Posts} from '../collections/posts';
-import Geohash from 'ngeohash';
+import Geohash from 'geohash';
 
 Meteor.methods({
   'addRoom': function (title, description) {
