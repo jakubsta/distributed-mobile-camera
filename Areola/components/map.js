@@ -19,6 +19,7 @@ class Map extends Component {
     return (<View style={styles.container}><MapView
       style={styles.map}
       showsUserLocation={true}
+      onLongPress={this.openAddChallengeModal.bind(this)}
       initialRegion={{
         latitude: 37.78825,
         longitude: -122.4324,
@@ -36,22 +37,19 @@ class Map extends Component {
         coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
-        title={user.name}
-        description="my description"
-        onLongPress={this.openAddChallengeModal.bind(this)}>
-        <MapView.Callout>
+
+      >
+        <MapView.Callout tooltip={true}>
           <View>
             <Text>Add sharing request</Text>
-            <Button
-              style={styles.button}
-              textStyle={styles.buttonText}
-              onPress={this.onUserIconClick.call(this, user)}>
-              Request video
-            </Button>
           </View>
         </MapView.Callout>
       </MapView.Marker>
     ))
+  }
+
+  onMarkerPress(evt) {
+    console.log("on marker press", evt);
   }
 
   onUserIconClick(user) {
@@ -59,7 +57,8 @@ class Map extends Component {
   }
 
   openAddChallengeModal(event) {
-    console.log("long press event: ", event);
+    console.log("long press coordinates", event.nativeEvent.coordinate);
+    event.stopPropagation();
   }
 }
 
@@ -68,7 +67,7 @@ export default createContainer(() => {
 
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({})
+    users: Meteor.collection('users').find({location: {$exists: true}})
   }
 }, Map)
 
