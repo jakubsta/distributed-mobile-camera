@@ -177,6 +177,7 @@ function leave(socketId) {
   delete remoteList[socketId]
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
+  Meteor.call('updateUserStatus', 'free');
   container.props.navigator.replace({name: 'map'});
 }
 function setSocket() {

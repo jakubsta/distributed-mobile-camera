@@ -49,18 +49,9 @@ const LocationSchema = new SimpleSchema({
 });
 
 
-const UserSchema = new SimpleSchema({
+const ChallengesSchema = new SimpleSchema({
   _id: {type: String},
-  emails: {type: Array},
-  'emails.$': {type: Object},
-  'emails.$.address': {type: String},
-  'emails.$.verified': {type: Boolean},
-  createdAt: {type: Date},
-  services: {type: Object, blackbox: true},
-  username: {type: String, optional: true},
-  location: {type: LocationSchema, optional: true},
-  state: {type: String, optional: true,  defaultValue: 'free'},
-  requestingUserId: {type: String, optional: true}
+  location: {type: LocationSchema, optional: true}
 });
 
-Meteor.users.attachSchema(UserSchema);
+Meteor.users.attachSchema(ChallengesSchema);

@@ -7,11 +7,13 @@ import {
 
 import Meteor, { createContainer } from 'react-native-meteor';
 import MapView from 'react-native-maps';
-
 class Markers extends Component {
 
+  leaveComponent;
+  
   constructor() {
     super();
+    this.leaveComponent = false;
   }
 
   render() {
@@ -19,8 +21,12 @@ class Markers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-  
-    switch(nextProps.user.state){
+
+    if (this.leaveComponent) {
+      return;
+    }
+    
+    switch(nextProps.user.state) {
       case 'requested':
         Alert.alert(
           'Streaming request!',
@@ -38,7 +44,6 @@ class Markers extends Component {
               onPress: () => {
                 Meteor.call('updateUserStatus', 'publishing');
                 Meteor.call('updateUserStatus', 'subscribing', nextProps.user.requestingUserId);
-                nextProps.navigator.push({name: 'stream-publisher'});
               }
             }
           ]
@@ -46,7 +51,12 @@ class Markers extends Component {
         break;
       case 'subscribing':
         nextProps.navigator.push({name: 'stream-subscriber'});
-      //kreciolek
+        this.leaveComponent = true;
+        break;
+      case 'publishing':
+        nextProps.navigator.push({name: 'stream-publisher'});
+        this.leaveComponent = true;
+        break;
     }
   }
 

@@ -3,11 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
   TouchableOpacity,
   Image
 } from 'react-native';
 
 import Markers from './markers';
+import Challenges from './challenges';
 import Meteor from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import Button from 'apsl-react-native-button';
@@ -25,18 +27,18 @@ export default class Map extends Component {
   render() {
     return (<View style={styles.container}>
       <MapView
-      style={styles.map}
-      showsUserLocation={true}
-      onLongPress={this.openAddChallengeModal.bind(this)}
-      initialRegion={{
-        latitude: 51.1079,
-        longitude: 17.0385,
-        latitudeDelta: 0.2000,
-        longitudeDelta: 0.0821
+        style={styles.map}
+        showsUserLocation={true}
+        onLongPress={this.openAddChallengeModal}
+        initialRegion={{
+          latitude: 51.1079,
+          longitude: 17.0385,
+          latitudeDelta: 0.2000,
+          longitudeDelta: 0.0821
       }}>
       <Markers navigator={this.props.navigator}></Markers>
       {this.renderMarkers()}
-    </MapView>
+      </MapView>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
           <Image
@@ -78,15 +80,31 @@ export default class Map extends Component {
   }
 
   onUserIconClick(user) {
-    return ()=> {
-      //Meteor.call('updateUserStatus', 'requesting');
+    return () => {
       Meteor.call('setUserAsRequested', user._id);
-
     }
   }
 
   openAddChallengeModal(event) {
-    event.stopPropagation();
+      console.log("long press coordinates", event.nativeEvent.coordinate);
+      Alert.alert(
+        'Create new challenge!'
+          [
+            {
+              text: 'Decline',
+              onPress: () => {}
+            },
+            {
+              text: 'Create',
+              onPress: () => {
+                Meteor.collection('challenges').insert({location: {coords: event.nativeEvent.coordinate}});
+              }
+            }
+          ]
+      );
+
+      event.stopPropagation();
+
   }
 }
 
