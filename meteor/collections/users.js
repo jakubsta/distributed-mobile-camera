@@ -60,7 +60,7 @@ const UserSchema = new SimpleSchema({
   username: {type: String, optional: true},
   location: {type: LocationSchema, optional: true},
   state: {type: String, defaultValue: 'free'},
-  requestingUserId: {type: String}
+  requestingUserId: {type: String, optional: true}
 });
 
 Meteor.users.attachSchema(UserSchema);
