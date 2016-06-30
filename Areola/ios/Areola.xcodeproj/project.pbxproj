@@ -22,8 +22,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		36658E031D24AC79000A44C2 /* background.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 36658E021D24AC79000A44C2 /* background.mp4 */; };
-		36658E041D24AC7C000A44C2 /* background.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 36658E021D24AC79000A44C2 /* background.mp4 */; };
+		36CF2A341D251AB700B9B96E /* background.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 36CF2A331D251AB700B9B96E /* background.mp4 */; };
 		6F30F1612A4C44B9A9D931B2 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3503E8B8A5E340ED8B176D49 /* libRCTVideo.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8C66B13D1D247BCF00A0A4BB /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C66B13C1D247BCF00A0A4BB /* AVFoundation.framework */; };
@@ -165,7 +164,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Areola/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		3503E8B8A5E340ED8B176D49 /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
-		36658E021D24AC79000A44C2 /* background.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = background.mp4; path = ../assets/background.mp4; sourceTree = "<group>"; };
+		36CF2A331D251AB700B9B96E /* background.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = background.mp4; path = ../../../../../Downloads/background.mp4; sourceTree = "<group>"; };
 		67DCB1945E0A489B81354345 /* libRCTWebRTC.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTWebRTC.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -364,7 +363,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				36658E021D24AC79000A44C2 /* background.mp4 */,
+				36CF2A331D251AB700B9B96E /* background.mp4 */,
 				8C66B1521D247DEF00A0A4BB /* libWebRTC.a */,
 				8C66B14E1D247C2800A0A4BB /* libstdc++.tbd */,
 				8C66B14C1D247C1F00A0A4BB /* libsqlite3.tbd */,
@@ -468,10 +467,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = GKLH3RZGM6;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = BAJN9836FW;
+						DevelopmentTeam = GKLH3RZGM6;
 					};
 				};
 			};
@@ -647,7 +647,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36658E041D24AC7C000A44C2 /* background.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,7 +655,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				36658E031D24AC79000A44C2 /* background.mp4 in Resources */,
+				36CF2A341D251AB700B9B96E /* background.mp4 in Resources */,
 				8C66B1511D247CDE00A0A4BB /* libjingle_peerconnection in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
@@ -726,6 +725,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -740,6 +741,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Areola.app/Areola";
 			};
 			name = Debug;
@@ -748,6 +750,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = AreolaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
@@ -759,6 +763,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Areola.app/Areola";
 			};
 			name = Release;
@@ -787,7 +792,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Areola;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Areola2;
 				PRODUCT_NAME = Areola;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -818,7 +823,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Areola;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Areola2;
 				PRODUCT_NAME = Areola;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
