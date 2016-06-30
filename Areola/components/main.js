@@ -21,13 +21,22 @@ class Chat extends Component {
 
 
   componentDidMount() {
-    setInterval(() => {
+    /*setInterval(() => {
       navigator.geolocation.getCurrentPosition((position) => {
       Meteor.call('updateLocation', position)
     },
     (error) => {},
     {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
-    }, 10000);
+    }, 10000);*/
+    navigator.geolocation.getCurrentPosition((position) => {
+        Meteor.call('updateLocation', position)
+      },
+      (error) => {
+        console.log('blad', error);
+      },
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+
   }
 
   render() {

@@ -222,6 +222,10 @@ function peerConnected() {
 
 function getStats() {
   var pc = pcPeers[Object.keys(pcPeers)[0]];
+  if (!pc || !pc.getRemoteStreams()) {
+    container.props.navigator.replace({name: 'map'});
+    return;
+  }
   if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
     var track = pc.getRemoteStreams()[0].getAudioTracks()[0];
     pc.getStats(track, function(report) {
@@ -258,6 +262,7 @@ class StreamSubscriber extends Component {
   }
 
   componentWillUnmount() {
+    console.log('subscriber unmount');
     // closeConnection();
   }
 

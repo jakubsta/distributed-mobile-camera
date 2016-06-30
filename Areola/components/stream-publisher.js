@@ -219,8 +219,9 @@ function peerConnected() {
 
 function getStats() {
   var pc = pcPeers[Object.keys(pcPeers)[0]];
-  if (!pc.getRemoteStreams()) {
+  if (!pc || !pc.getRemoteStreams()) {
     container.props.navigator.replace({name: 'map'});
+    return;
   }
   if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
     var track = pc.getRemoteStreams()[0].getAudioTracks()[0];
@@ -258,6 +259,7 @@ export default class StreamPublisher extends Component {
   }
 
   componentWillUnmount() {
+    console.log('publisher unmount');
     // closeConnection();
   }
 
@@ -281,15 +283,15 @@ export default class StreamPublisher extends Component {
       <View style={styles.container}>
         {this.showMessage.apply(this)}
         <RTCView streamURL={this.state.selfViewSrc} style={styles.video}/>
-          <TouchableOpacity onPress={() => closeConnection()} style={styles.close}>
-            <Image
-              style={styles.button}
-              source={require('../assets/close.png')}
-            />
-          </TouchableOpacity>
       </View>
     );
   }
+/*<TouchableOpacity onPress={() => closeConnection()} style={styles.close}>
+<Image
+style={styles.button}
+source={require('../assets/close.png')}
+/>
+</TouchableOpacity>*/
 
 }
 

@@ -73,7 +73,7 @@ export default class Map extends Component {
       >
         <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)} >
           <Button onPress={this.onUserIconClick(user)}>
-            <Text>Press tooltip to ask for sharing</Text>
+            Ask for sharing
           </Button>
         </MapView.Callout>
       </MapView.Marker>));
