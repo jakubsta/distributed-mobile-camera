@@ -33,10 +33,7 @@ class Home extends Component {
       (<Video
         source={{uri: "background"}}
         style={styles.fullScreen}
-        onLoad={() => { console.log('loaded!') }}
         onProgress={this.onProgress}
-        onError={(err) => { console.log('error!', err) }}
-        onEnd={() => { console.log('ended!') }}
         rate={1}
         volume={1}
         muted={true}

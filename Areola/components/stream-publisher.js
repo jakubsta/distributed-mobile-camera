@@ -4,7 +4,9 @@ import {
   Text,
   View,
   TextInput,
-  NativeModules
+  NativeModules,
+  TouchableOpacity,
+  Image
 } from 'react-native';
 import Meteor, { Accounts } from 'react-native-meteor';
 import Button from 'apsl-react-native-button';
@@ -18,6 +20,7 @@ var io = require('socket.io-client/socket.io');
 
 var socket;
 let roomId = 'aaa';
+var closeConnection;
 
 import {
   RTCPeerConnection,
@@ -38,7 +41,6 @@ var localStream;
 
 function getLocalStream(isFront, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
-    console.log('------->', sourceInfos);
     var videoSourceId;
     for (var i = 0; i < sourceInfos.length; i++) {
       var sourceInfo = sourceInfos[i];
@@ -70,6 +72,7 @@ function join(roomID) {
 
 function createPC(socketId, isOffer) {
   var pc = new RTCPeerConnection(configuration);
+  closeConnection = pc.close.bind(pc);
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
@@ -189,13 +192,13 @@ function leave(socketId) {
   delete pcPeers[socketId];
 
   var remoteList = container.state.remoteList;
-  delete remoteList[socketId]
+  delete remoteList[socketId];
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
+  container.props.navigator.replace({name: 'map'});
 }
 function setSocket() {
   socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
-
   socket.on('exchange', function (data) {
     exchange(data);
   });
@@ -236,6 +239,9 @@ function peerConnected() {
 
 function getStats() {
   var pc = pcPeers[Object.keys(pcPeers)[0]];
+  if (!pc.getRemoteStreams()) {
+    container.props.navigator.replace({name: 'map'});
+  }
   if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
     var track = pc.getRemoteStreams()[0].getAudioTracks()[0];
     pc.getStats(track, function(report) {
@@ -245,7 +251,7 @@ function getStats() {
 
 var container;
 
-class StreamPublisher extends Component {
+export default class StreamPublisher extends Component {
 
   constructor() {
     super();
@@ -271,6 +277,10 @@ class StreamPublisher extends Component {
     });
   }
 
+  componentWillUnmount() {
+    closeConnection();
+  }
+
   clearMessage() {
     this.setState({status: null, message: null});
   }
@@ -291,12 +301,17 @@ class StreamPublisher extends Component {
       <View style={styles.container}>
         {this.showMessage.apply(this)}
         <RTCView streamURL={this.state.selfViewSrc} style={styles.video}/>
+          <TouchableOpacity onPress={() => closeConnection()} style={styles.close}>
+            <Image
+              style={styles.button}
+              source={require('../assets/close.png')}
+            />
+          </TouchableOpacity>
       </View>
     );
   }
-}
 
-export default ReactTimeout(StreamPublisher);
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -321,5 +336,16 @@ const styles = StyleSheet.create({
   messageText: {
     textAlign: 'center',
     marginTop: 10
-  }
+  },
+  publish: {
+    position: 'absolute',
+    right: 20,
+    top: 20
+  },
+  button: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    width: 40,
+    height: 40
+  },
 });

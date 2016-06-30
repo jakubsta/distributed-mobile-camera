@@ -18,6 +18,7 @@ var io = require('socket.io-client/socket.io');
 
 var socket;
 var roomId = 'aaa';
+var closeConnection;
 
 import {
   RTCPeerConnection,
@@ -74,6 +75,7 @@ function join(roomID) {
 
 function createPC(socketId, isOffer) {
   var pc = new RTCPeerConnection(configuration);
+  closeConnection = pc.close.bind(pc);
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
@@ -195,6 +197,7 @@ function leave(socketId) {
   delete remoteList[socketId]
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
+  container.props.navigator.replace({name: 'map'});
 }
 function setSocket() {
   socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
@@ -272,6 +275,10 @@ class StreamSubscriber extends Component {
     setSocket().then(()=>{
       join(roomId);
     });
+  }
+
+  componentWillUnmount() {
+    closeConnection();
   }
 
   clearMessage() {
