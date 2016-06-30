@@ -36,21 +36,21 @@ class Map extends Component {
       {this.renderPoints()}
     </MapView>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity onPress={() => this.logout()}>
+        <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
           <Image
-            style={[styles.button, styles.logout]}
+            style={styles.button}
             source={require('../assets/logout.png')}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-publisher'})}>
+        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-publisher'})} style={styles.publish}>
           <Image
-            style={[styles.button, styles.publish]}
+            style={styles.button}
             source={require('../assets/publish.png')}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}>
+        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})} style={styles.subscribe}>
           <Image
-            style={[styles.button, styles.subscribe]}
+            style={styles.button}
             source={require('../assets/subscribe.png')}
           />
         </TouchableOpacity>
@@ -114,28 +114,24 @@ const styles = StyleSheet.create({
   },
   logout: {
     position: 'absolute',
-    width: 40,
-    height: 40,
-    right: 10,
-    top: 10
+    right: 45,
+    top: 20
   },
   subscribe: {
     position: 'absolute',
-    width: 40,
-    height: 40,
-    right: 70,
-    top: 10
+    right: 100,
+    top: 20
   },
   publish: {
     position: 'absolute',
-    width: 40,
-    height: 40,
-    right: 130,
-    top: 10
+    right: 150,
+    top: 20
   },
   button: {
     backgroundColor: 'transparent',
     borderWidth: 0,
+    width: 35,
+    height: 35,
   },
   buttonText: {
     backgroundColor: 'transparent',
