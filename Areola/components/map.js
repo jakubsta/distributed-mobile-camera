@@ -67,7 +67,7 @@ export default class Map extends Component {
     return Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }).map((user) => (
       <MapView.Marker
         key={user._id}
-        pinColor={user.state === 'streaming' ? 'green' : 'red'}
+        pinColor={user.state === 'publishing' ? 'green' : 'red'}
         coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
