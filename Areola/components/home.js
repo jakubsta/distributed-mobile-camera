@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'center',
-    marginTop: 100,
+    marginTop: 140,
   },
   button: {
     borderWidth: 1,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   authorizeText: {
     backgroundColor: 'transparent',
-    fontSize: 26,
+    fontSize: 34,
     color: '#222222',
     fontWeight: 'bold',
     textShadowColor: '#4d4d4d',
