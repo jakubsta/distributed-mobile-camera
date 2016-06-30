@@ -10,6 +10,7 @@ import {
 import Markers from './markers';
 import Meteor from 'react-native-meteor';
 import MapView from 'react-native-maps';
+import Button from 'apsl-react-native-button';
 
 export default class Map extends Component {
 
@@ -34,6 +35,7 @@ export default class Map extends Component {
         longitudeDelta: 0.0821
       }}>
       <Markers navigator={this.props.navigator}></Markers>
+      {this.renderMarkers()}
     </MapView>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
@@ -58,8 +60,32 @@ export default class Map extends Component {
     </View>);
   }
 
+  renderMarkers() {
+    return Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }).map((user) => (
+      <MapView.Marker
+        key={user._id}
+        pinColor={user.state === 'streaming' ? 'green' : 'red'}
+        coordinate={{
+            longitude: user.location.coords.longitude,
+            latitude: user.location.coords.latitude}}
+      >
+        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)} >
+          <Button onPress={this.onUserIconClick(user)}>
+            <Text>Press tooltip to ask for sharing</Text>
+          </Button>
+        </MapView.Callout>
+      </MapView.Marker>));
+  }
+
+  onUserIconClick(user) {
+    return ()=> {
+      //Meteor.call('updateUserStatus', 'requesting');
+      Meteor.call('setUserAsRequested', user._id);
+
+    }
+  }
+
   openAddChallengeModal(event) {
-    console.log("long press coordinates", event.nativeEvent.coordinate);
     event.stopPropagation();
   }
 }

@@ -54,7 +54,6 @@ function getLocalStream(isFront, callback) {
         optional: [{sourceId: videoSourceId}]
       }
     }, function (stream) {
-      console.log('dddd', stream);
       callback(stream);
     }, logError);
   });
@@ -62,7 +61,6 @@ function getLocalStream(isFront, callback) {
 
 function join(roomID) {
   socket.emit('join', roomID, function(socketIds){
-    console.log('join', socketIds);
     for (var i in socketIds) {
       var socketId = socketIds[i];
       createPC(socketId, true);
@@ -76,7 +74,6 @@ function createPC(socketId, isOffer) {
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
-    console.log('onicecandidate', event.candidate);
     if (event.candidate) {
       socket.emit('exchange', {'to': socketId, 'candidate': event.candidate });
     }
@@ -84,23 +81,19 @@ function createPC(socketId, isOffer) {
 
   function createOffer() {
     pc.createOffer(function(desc) {
-      console.log('createOffer', desc);
       pc.setLocalDescription(desc, function () {
-        console.log('setLocalDescription', pc.localDescription);
         socket.emit('exchange', {'to': socketId, 'sdp': pc.localDescription });
       }, logError);
     }, logError);
   }
 
   pc.onnegotiationneeded = function () {
-    console.log('onnegotiationneeded');
     if (isOffer) {
       createOffer();
     }
   }
 
   pc.oniceconnectionstatechange = function(event) {
-    console.log('oniceconnectionstatechange', event.target.iceConnectionState);
     if (event.target.iceConnectionState === 'completed') {
       setTimeout(() => {
         getStats();
@@ -111,11 +104,9 @@ function createPC(socketId, isOffer) {
     }
   };
   pc.onsignalingstatechange = function(event) {
-    console.log('onsignalingstatechange', event.target.signalingState);
   };
 
   pc.onaddstream = function (event) {
-    console.log('onaddstream', event.stream);
     container.setState({info: 'One peer join!'});
     peerConnected();
 
@@ -124,7 +115,6 @@ function createPC(socketId, isOffer) {
     container.setState({ remoteList: remoteList });
   };
   pc.onremovestream = function (event) {
-    console.log('onremovestream', event.stream);
   };
 
   pc.addStream(localStream);
@@ -135,21 +125,17 @@ function createPC(socketId, isOffer) {
     var dataChannel = pc.createDataChannel("text");
 
     dataChannel.onerror = function (error) {
-      console.log("dataChannel.onerror", error);
     };
 
     dataChannel.onmessage = function (event) {
-      console.log("dataChannel.onmessage:", event.data);
       container.receiveTextData({user: socketId, message: event.data});
     };
 
     dataChannel.onopen = function () {
-      console.log('dataChannel.onopen');
       container.setState({textRoomConnected: true});
     };
 
     dataChannel.onclose = function () {
-      console.log("dataChannel.onclose");
     };
 
     pc.textDataChannel = dataChannel;
@@ -167,25 +153,20 @@ function exchange(data) {
   }
 
   if (data.sdp) {
-    console.log('exchange sdp', data);
     pc.setRemoteDescription(new RTCSessionDescription(data.sdp), function () {
       if (pc.remoteDescription.type == "offer")
         pc.createAnswer(function(desc) {
-          console.log('createAnswer', desc);
           pc.setLocalDescription(desc, function () {
-            console.log('setLocalDescription', pc.localDescription);
             socket.emit('exchange', {'to': fromId, 'sdp': pc.localDescription });
           }, logError);
         }, logError);
     }, logError);
   } else {
-    console.log('exchange candidate', data);
     pc.addIceCandidate(new RTCIceCandidate(data.candidate));
   }
 }
 
 function leave(socketId) {
-  console.log('leave', socketId);
   var pc = pcPeers[socketId];
   var viewIndex = pc.viewIndex;
   pc.close();
@@ -208,7 +189,6 @@ function setSocket() {
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
       getLocalStream(false, function (stream) {
-        console.log('....');
         localStream = stream;
         container.setState({selfViewSrc: stream.toURL()});
         container.setState({status: 'ready', info: 'Please enter or create room ID'});
@@ -219,7 +199,6 @@ function setSocket() {
   return promise;
 }
 function logError(error) {
-  console.log("logError", error);
 }
 
 function mapHash(hash, func) {
@@ -278,7 +257,7 @@ export default class StreamPublisher extends Component {
   }
 
   componentWillUnmount() {
-    closeConnection();
+    // closeConnection();
   }
 
   clearMessage() {
