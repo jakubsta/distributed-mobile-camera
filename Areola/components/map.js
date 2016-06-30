@@ -8,11 +8,11 @@ import {
   Image
 } from 'react-native';
 
-import Meteor, { createContainer } from 'react-native-meteor';
+import Markers from './markers';
+import Meteor, {createContainer} from 'react-native-meteor';
 import MapView from 'react-native-maps';
-import Button from 'apsl-react-native-button';
 
-class Map extends Component {
+export default class Map extends Component {
 
   constructor() {
     super();
@@ -34,7 +34,7 @@ class Map extends Component {
         latitudeDelta: 0.2000,
         longitudeDelta: 0.0821
       }}>
-      {this.renderPoints()}
+      <Markers></Markers>
     </MapView>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
@@ -126,10 +126,8 @@ class Map extends Component {
 
 export default createContainer(() => {
   const handler = Meteor.subscribe('users');
-  console.log("MY USER: ", Meteor.user());
+
   return {
-    status: handler.ready(),
-    users: Meteor.collection('users').find({location: {$exists: true}}),
     user: Meteor.user()
   }
 }, Map)
