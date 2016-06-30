@@ -61,20 +61,34 @@ class Map extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log("next Props", nextProps);
-    if (nextProps.user.state === 'requested') {
-      Alert.alert(
-        'Streaming request!',
-        'Someone is asking you to share your camera!',
-        [
-          {text: 'Decline', onPress: () => Meteor.call('updateUserStatus', 'free') },
-          {text: 'Share', onPress: () => {
-            Meteor.call('updateUserStatus', 'publishing');
-            this.props.navigator.push({name: 'stream-publisher'});
 
-          }}
-        ]
-      )
+    switch(nextProps.user.state){
+      case 'requested':
+        Alert.alert(
+          'Streaming request!',
+          'Someone is asking you to share your camera!',
+          [
+            {
+              text: 'Decline',
+              onPress: () => {
+                Meteor.call('updateUserStatus', 'free');
+                Meteor.call('updateUserStatus', 'free', nextProps.user.requestingUserId);
+              }
+            },
+            {text: 'Share', onPress: () => {
+              Meteor.call('updateUserStatus', 'publishing');
+              Meteor.call('updateUserStatus', 'subscribing', nextProps.user.requestingUserId);
+              this.props.navigator.push({name: 'stream-publisher'});
+
+            }}
+          ]
+        );
+        break;
+      case 'requesting':
+        //kreciolek
     }
+
+
   }
 
   renderPoints() {
@@ -99,10 +113,8 @@ class Map extends Component {
   onUserIconClick(user) {
     return e => {
       console.log("ping user: ", user, e);
-      Meteor.call('updateUserStatus', 'requested', () => {
-        console.log("from asking callback");
-
-      })
+      Meteor.call('updateUserStatus', 'requesting');
+      Meteor.call('setUserAsRequested', user);
     };
   }
 

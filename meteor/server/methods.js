@@ -22,11 +22,14 @@ Meteor.methods({
       roomId,
       message,
       author: user.username,
-      submitDate: new Date(),
+      submitDate: new Date()
     });
   },
-  'updateUserStatus': function( newStatus) {
+  'updateUserStatus': function(newStatus) {
     return Meteor.users.update({_id: Meteor.user()._id}, {$set: {state: newStatus}});
+  },
+  'setUserAsRequested': function(user) {
+    return Meteor.users.update({_id: user._id}, { $set: {state: 'requested', requestingUserId: Meteor.user()._id } });
   },
   'updateLocation': function (location) {
     const userId = Meteor.userId();
