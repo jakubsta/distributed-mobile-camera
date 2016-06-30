@@ -87,8 +87,6 @@ export default class Map extends Component {
       case 'requesting':
         //kreciolek
     }
-
-
   }
 
   renderPoints() {
