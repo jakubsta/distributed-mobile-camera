@@ -59,13 +59,14 @@ class Markers extends Component {
               onPress: () => {
                 Meteor.call('updateUserStatus', 'publishing');
                 Meteor.call('updateUserStatus', 'subscribing', nextProps.user.requestingUserId);
-                this.props.navigator.push({name: 'stream-publisher'});
+                nextProps.navigator.push({name: 'stream-publisher'});
               }
             }
           ]
         );
         break;
-      case 'requesting':
+      case 'subscribing':
+        nextProps.navigator.push({name: 'stream-subscriber'});
       //kreciolek
     }
   }
@@ -81,12 +82,13 @@ class Markers extends Component {
 }
 
 
-export default createContainer(() => {
+export default createContainer((props) => {
   const handler = Meteor.subscribe('users');
 
   return {
     status: handler.ready(),
     users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }),
-    user: Meteor.collection('users').findOne({_id: Meteor.user()._id}, {state:1, requestingUserId:1})
+    user: Meteor.collection('users').findOne({_id: Meteor.user()._id}, {state:1, requestingUserId:1}),
+    ...props
   }
 }, Markers)

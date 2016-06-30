@@ -33,7 +33,7 @@ export default class Map extends Component {
         latitudeDelta: 0.2000,
         longitudeDelta: 0.0821
       }}>
-      <Markers></Markers>
+      <Markers navigator={this.props.navigator}></Markers>
     </MapView>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
