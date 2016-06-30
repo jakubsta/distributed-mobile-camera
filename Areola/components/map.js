@@ -21,10 +21,10 @@ class Map extends Component {
       showsUserLocation={true}
       onLongPress={this.openAddChallengeModal.bind(this)}
       initialRegion={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        latitude: 51.1079,
+        longitude: 17.0385,
+        latitudeDelta: 0.2000,
+        longitudeDelta: 0.0821
       }}>
       {this.renderPoints()}
     </MapView>
