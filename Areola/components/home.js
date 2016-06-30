@@ -29,7 +29,7 @@ class Home extends Component {
   backgroundVideo() {
     return (!this.props.user) ?
       (<Video
-        source={{uri: "backgroundMovie"}}
+        source={{uri: "background"}}
         style={styles.fullScreen}
         onLoad={() => { console.log('loaded!') }}
         onProgress={this.onProgress}
