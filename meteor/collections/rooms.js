@@ -13,7 +13,7 @@ const RoomSchema = new SimpleSchema({
   },
   creationDate: {
     type: Date,
-  },
+  }
 });
 
 const Rooms = new Mongo.Collection('rooms');

@@ -37,6 +37,7 @@ export default class Map extends Component {
           longitudeDelta: 0.0821
       }}>
       <Markers navigator={this.props.navigator}></Markers>
+      <Challenges navigator={this.props.navigator}></Challenges>
       {this.renderMarkers()}
       </MapView>
       <View style={styles.buttonsContainer}>
@@ -86,23 +87,23 @@ export default class Map extends Component {
   }
 
   openAddChallengeModal(event) {
-      console.log("long press coordinates", event.nativeEvent.coordinate);
+      const longPressedCoords = event.nativeEvent.coordinate;
       Alert.alert(
-        'Create new challenge!'
-          [
-            {
-              text: 'Decline',
-              onPress: () => {}
-            },
-            {
-              text: 'Create',
-              onPress: () => {
-                Meteor.collection('challenges').insert({location: {coords: event.nativeEvent.coordinate}});
-              }
+        'Create new challenge!',
+        'Add some coins to earn for your challenge',
+        [
+          {
+            text: 'Decline',
+            onPress: () => {}
+          },
+          {
+            text: 'Create',
+            onPress: () => {
+              Meteor.call('addChallenge', {location: {coords: longPressedCoords}});
             }
-          ]
+          }
+        ]
       );
-
       event.stopPropagation();
 
   }

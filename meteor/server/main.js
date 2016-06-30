@@ -5,6 +5,6 @@ import './rooms';
 import './posts';
 import './users';
 import './methods';
+import './challenge';
 
-Meteor.startup(() => {
-});
+Meteor.startup(() => { });

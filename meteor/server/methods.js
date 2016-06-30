@@ -2,6 +2,7 @@ import {Meteor} from 'meteor/meteor';
 
 import {Rooms} from '../collections/rooms';
 import {Posts} from '../collections/posts';
+import {Challenge} from '../collections/challenges';
 import Geohash from 'ngeohash';
 
 Meteor.methods({
@@ -12,6 +13,10 @@ Meteor.methods({
       description,
       creationDate: new Date()
     })
+  },
+  
+  'addChallenge': function (challenge) {
+    Challenge.insert(challenge);
   },
 
   'addPost': function (roomId, message) {
