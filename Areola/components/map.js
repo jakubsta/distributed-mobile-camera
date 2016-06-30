@@ -5,17 +5,44 @@ import {
   View,
   Alert,
   TouchableOpacity,
-  Image
+  Image,
+  PushNotificationIOS
 } from 'react-native';
 
 import Markers from './markers';
 import Meteor, {createContainer} from 'react-native-meteor';
 import MapView from 'react-native-maps';
+import Button from 'apsl-react-native-button';
+import PushNotification from 'react-native-push-notification';
+
+PushNotification.configure({
+
+    // (optional) Called when Token is generated (iOS and Android)
+    onRegister: function(token) {
+        console.log( 'TOKEN:', token );
+    },
+
+    // (required) Called when a remote or local notification is opened or received
+    onNotification: function(notification) {
+			console.log( 'NOTIFICATION:', notification );
+			// PushNotification.localNotificationSchedule({
+			// 		message: "My Notification Message", // (required)
+			// 		date: new Date(Date.now() + (60 * 1000)).toISOString() // in 60 secs
+			// });
+    },
+});
 
 export default class Map extends Component {
 
   constructor() {
     super();
+    // setInterval(()=> {
+			// PushNotification.localNotification({message: 'Test'});
+			PushNotification.localNotificationSchedule({
+					message: "My Notification Message", // (required)
+					date: new Date(Date.now() + (60 * 1000)).toISOString() // in 60 secs
+			});
+    // }, 5000);
   }
 
   logout() {
@@ -23,7 +50,7 @@ export default class Map extends Component {
   }
 
   render() {
-    return (<View style={styles.container}>
+		return (<View style={styles.container}>
       <MapView
       style={styles.map}
       showsUserLocation={true}
@@ -49,7 +76,8 @@ export default class Map extends Component {
             source={require('../assets/publish.png')}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})} style={styles.subscribe}>
+        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})} 
+          style={styles.subscribe}>
           <Image
             style={styles.button}
             source={require('../assets/subscribe.png')}
