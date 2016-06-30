@@ -23,7 +23,7 @@ class Challenges extends Component {
   renderPoints() {
     return this.props.challenges.map((challenge) => (
       <MapView.Marker
-        key={user._id}
+        key={challenge._id}
         pinColor='yellow'
         coordinate={{
             longitude: challenge.location.coords.longitude,
@@ -31,8 +31,7 @@ class Challenges extends Component {
       >
         <MapView.Callout style={{width:200, height:60}}>
           <View>
-            <Text>Press tooltip to ask for sharing</Text>
-            <Text>{user.username}</Text>
+            <Text>Share from here to earn challenge coins.</Text>
           </View>
         </MapView.Callout>
       </MapView.Marker>

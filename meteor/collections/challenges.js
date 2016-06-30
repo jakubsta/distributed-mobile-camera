@@ -37,14 +37,8 @@ const LocationCoordsSchema = new SimpleSchema({
 
 
 const LocationSchema = new SimpleSchema({
-  timestamp: {
-    type: Number
-  },
   coords: {
     type: LocationCoordsSchema
-  },
-  geohash: {
-    type: String
   }
 });
 
@@ -54,4 +48,7 @@ const ChallengesSchema = new SimpleSchema({
   location: {type: LocationSchema, optional: true}
 });
 
-Meteor.users.attachSchema(ChallengesSchema);
+const Challenge = new Mongo.Collection('challenges');
+Challenge.attachSchema(ChallengesSchema);
+
+export { Challenge };
