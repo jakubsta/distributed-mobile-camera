@@ -25,8 +25,8 @@ Meteor.methods({
       submitDate: new Date()
     });
   },
-  'updateUserStatus': function(newStatus) {
-    return Meteor.users.update({_id: Meteor.user()._id}, {$set: {state: newStatus}});
+  'updateUserStatus': function(newStatus, userId = Meteor.user()._id ) {
+    return Meteor.users.update({_id: userId}, {$set: {state: newStatus}});
   },
   'setUserAsRequested': function(user) {
     return Meteor.users.update({_id: user._id}, { $set: {state: 'requested', requestingUserId: Meteor.user()._id } });
