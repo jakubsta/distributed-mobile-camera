@@ -64,12 +64,13 @@ class Map extends Component {
   renderPoints() {
     return this.props.users.map((user) => (
       <MapView.Marker
+        key={user._id}
         coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
 
       >
-        <MapView.Callout tooltip={true}>
+        <MapView.Callout style={{width:100, height:50}}>
           <View>
             <Text>Add sharing request</Text>
           </View>

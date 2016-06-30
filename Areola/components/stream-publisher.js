@@ -25,11 +25,10 @@ import {
   RTCIceCandidate,
   RTCSessionDescription,
   RTCView,
+  RTCSetting,
   MediaStreamTrack,
   getUserMedia,
 } from 'react-native-webrtc';
-
-
 
 
 var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
@@ -195,8 +194,7 @@ function leave(socketId) {
   container.setState({info: 'One peer leave!'});
 }
 function setSocket() {
-
-  var socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
+  socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
 
   socket.on('exchange', function (data) {
     exchange(data);
@@ -206,11 +204,12 @@ function setSocket() {
   });
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
-      resolve();
       getLocalStream(false, function (stream) {
+        console.log('....');
         localStream = stream;
         container.setState({selfViewSrc: stream.toURL()});
         container.setState({status: 'ready', info: 'Please enter or create room ID'});
+        resolve();
       });
     });
   });
@@ -230,9 +229,9 @@ function mapHash(hash, func) {
 }
 
 function peerConnected() {
-  RTCSetting.setAudioOutput('speaker');
-  RTCSetting.setKeepScreenOn(true);
-  RTCSetting.setProximityScreenOff(true);
+  // RTCSetting.setAudioOutput('speaker');
+  // RTCSetting.setKeepScreenOn(true);
+  // RTCSetting.setProximityScreenOff(true);
 }
 
 function getStats() {

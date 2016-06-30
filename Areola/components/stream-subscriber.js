@@ -25,6 +25,7 @@ import {
   RTCIceCandidate,
   RTCSessionDescription,
   RTCView,
+  RTCSetting,
   MediaStreamTrack,
   getUserMedia,
 } from 'react-native-webrtc';
@@ -65,6 +66,7 @@ function join(roomID) {
     console.log('join', socketIds);
     for (var i in socketIds) {
       var socketId = socketIds[i];
+      // debugger;
       createPC(socketId, true);
     }
   });
@@ -102,7 +104,7 @@ function createPC(socketId, isOffer) {
     console.log('oniceconnectionstatechange', event.target.iceConnectionState);
     if (event.target.iceConnectionState === 'completed') {
       setTimeout(() => {
-        getStats();
+        // getStats();
       }, 1000);
     }
     if (event.target.iceConnectionState === 'connected') {
@@ -195,7 +197,7 @@ function leave(socketId) {
   container.setState({info: 'One peer leave!'});
 }
 function setSocket() {
-  var socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
+  socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
 
   socket.on('exchange', function (data) {
     exchange(data);
@@ -206,11 +208,11 @@ function setSocket() {
 
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
-      resolve();
       getLocalStream(false, function (stream) {
         localStream = stream;
         container.setState({selfViewSrc: stream.toURL()});
         container.setState({status: 'ready', info: 'Please enter or create room ID'});
+        resolve();
       });
     });
   });
@@ -230,9 +232,9 @@ function mapHash(hash, func) {
 }
 
 function peerConnected() {
-  RTCSetting.setAudioOutput('speaker');
-  RTCSetting.setKeepScreenOn(true);
-  RTCSetting.setProximityScreenOff(true);
+  // RTCSetting.setAudioOutput('speaker');
+  // RTCSetting.setKeepScreenOn(true);
+  // RTCSetting.setProximityScreenOff(true);
 }
 
 function getStats() {
