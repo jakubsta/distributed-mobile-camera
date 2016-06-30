@@ -28,54 +28,37 @@ class Home extends Component {
 
   backgroundVideo() {
     return (!this.props.user) ?
-    (<Video
-      source={{uri: "backgroundMovie"}}
-      style={styles.fullScreen}
-      onLoad={() => { console.log('loaded!') }}
-      onProgress={this.onProgress}
-      onError={(err) => { console.log('error!', err) }}
-      onEnd={() => { console.log('ended!') }}
-      rate={1}
-      volume={1}
-      muted={true}
-      resizeMode="cover"
-      repeat={true}
-    />) : null;
+      (<Video
+        source={{uri: "backgroundMovie"}}
+        style={styles.fullScreen}
+        onLoad={() => { console.log('loaded!') }}
+        onProgress={this.onProgress}
+        onError={(err) => { console.log('error!', err) }}
+        onEnd={() => { console.log('ended!') }}
+        rate={1}
+        volume={1}
+        muted={true}
+        resizeMode="cover"
+        repeat={true}
+      />) : null;
   }
 
   userActions() {
-    if(!this.props.user) {
+    if (!this.props.user) {
       return (
-        <View>
+        <View style={styles.containerUnauthorized}>
           <Button
-            style={styles.button}
-            textStyle={styles.buttonText}
+            style={styles.authorize}
+            textStyle={styles.authorizeText}
             onPress={() => this.props.navigator.push({name: 'login'})}>
             Login
           </Button>
+          <Text style={[styles.authorizeText, {fontSize: 17, padding: 5}]}> or </Text>
           <Button
-            style={styles.button}
-            textStyle={styles.buttonText}
+            style={styles.authorize}
+            textStyle={styles.authorizeText}
             onPress={() => this.props.navigator.push({name: 'signup'})}>
             Signup
-          </Button>
-          <Button
-            style={styles.button}
-            textStyle={styles.buttonText}
-            onPress={() => this.props.navigator.push({name: 'stream-publisher'})}>
-            Stream Publisher
-          </Button>
-          <Button
-            style={styles.button}
-            textStyle={styles.buttonText}
-            onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}>
-            Stream Subscriber
-          </Button>
-          <Button
-            style={styles.button}
-            textStyle={styles.buttonText}
-            onPress={() => this.props.navigator.push({name: 'map'})}>
-            MAP
           </Button>
         </View>);
     }
@@ -135,6 +118,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  containerUnauthorized: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    marginTop: 100,
+  },
   button: {
     borderWidth: 1,
     borderColor: '#2980b9',
@@ -142,6 +132,23 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 10,
     padding: 10
+  },
+  authorize: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+  authorizeText: {
+    backgroundColor: 'transparent',
+    fontSize: 26,
+    color: '#222222',
+    fontWeight: 'bold',
+    textShadowColor: '#4d4d4d',
+    textShadowRadius: 2,
+    textShadowOffset: {
+      width: 2,
+      height: 2
+    },
+    opacity: 0.8
   },
   buttonText: {
     color: 'white'
