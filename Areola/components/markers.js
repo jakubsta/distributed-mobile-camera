@@ -39,9 +39,8 @@ class Markers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.user) {
-      return;
-    }
+  
+    console.log(nextProps)
     switch(nextProps.user.state){
       case 'requested':
         Alert.alert(
@@ -72,8 +71,11 @@ class Markers extends Component {
   }
 
   onUserIconClick(user) {
-    Meteor.call('updateUserStatus', 'requesting');
-    Meteor.call('setUserAsRequested', user);
+    return ()=> {
+      //Meteor.call('updateUserStatus', 'requesting');
+      Meteor.call('setUserAsRequested', user._id);
+
+    }
   }
 
 }
@@ -84,7 +86,7 @@ export default createContainer(() => {
 
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({location: {$exists: true}}),
-    user: Meteor.user()
+    users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }),
+    user: Meteor.collection('users').findOne({_id: Meteor.user()._id}, {state:1, requestingUserId:1})
   }
 }, Markers)

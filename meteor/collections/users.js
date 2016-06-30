@@ -59,7 +59,7 @@ const UserSchema = new SimpleSchema({
   services: {type: Object, blackbox: true},
   username: {type: String, optional: true},
   location: {type: LocationSchema, optional: true},
-  state: {type: String},
+  state: {type: String, defaultValue: 'free'},
   requestingUserId: {type: String}
 });
 
