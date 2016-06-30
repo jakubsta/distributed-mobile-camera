@@ -27,7 +27,6 @@ class Markers extends Component {
         coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
-
       >
         <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)}>
           <View>
@@ -39,12 +38,10 @@ class Markers extends Component {
   }
 
   onUserIconClick(user) {
-    Meteor.call('updateUserStatus', 'requested', () => {
-      console.log("from asking callback");
-    })
+    console.log("ping user: ", user, e);
+    Meteor.call('updateUserStatus', 'requesting');
+    Meteor.call('setUserAsRequested', user);
   }
-
-
 }
 
 export default createContainer(() => {
