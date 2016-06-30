@@ -33,7 +33,7 @@ class Signup extends Component {
           return this.setState({status: 'error', message: error.reason});
         }
         this.props.navigator.push({
-          name: 'home',
+          name: 'map',
           passProps: {
             status: 'success',
             message: 'Account created!',
