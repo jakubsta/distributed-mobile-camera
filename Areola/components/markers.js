@@ -64,10 +64,10 @@ class Markers extends Component {
 
 
 export default createContainer((props) => {
-  const handler = Meteor.subscribe('users');
+
 
   return {
-    status: handler.ready(),
+    // status: handler.ready(),
     users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }),
     user: Meteor.collection('users').findOne({_id: Meteor.user()._id}, {state:1, requestingUserId:1}),
     ...props

@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import Markers from './markers';
-import Challenges from './challenges';
 import Meteor from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import Button from 'apsl-react-native-button';
@@ -18,6 +17,8 @@ export default class Map extends Component {
 
   constructor() {
     super();
+    Meteor.subscribe('users');
+    Meteor.subscribe('challenges');
   }
 
   logout() {
@@ -37,8 +38,8 @@ export default class Map extends Component {
           longitudeDelta: 0.0821
       }}>
       <Markers navigator={this.props.navigator}></Markers>
-      <Challenges navigator={this.props.navigator}></Challenges>
       {this.renderMarkers()}
+      {this.renderChallenges()}
       </MapView>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
@@ -78,6 +79,24 @@ export default class Map extends Component {
           </Button>
         </MapView.Callout>
       </MapView.Marker>));
+  }
+  
+  renderChallenges() {
+    return Meteor.collection('challenges').find({location: {$exists: true}}).map((challenge) => (
+      <MapView.Marker
+        key={challenge._id}
+        pinColor='yellow'
+        coordinate={{
+            longitude: challenge.location.coords.longitude,
+            latitude: challenge.location.coords.latitude}}
+      >
+        <MapView.Callout style={{width:200, height:60}}>
+          <View>
+            <Text>Share from here to earn challenge coins.</Text>
+          </View>
+        </MapView.Callout>
+      </MapView.Marker>
+    ))
   }
 
   onUserIconClick(user) {
