@@ -29,33 +29,35 @@ class Map extends Component {
       }}>
       {this.renderPoints()}
     </MapView>
-      <Text style={{fontWeight: 'bold'}}>
-        Welcome {this.props.user.username}
-      </Text>
-      <Button
-        style={styles.button}
-        textStyle={styles.buttonText}
-        onPress={() => this.logout()}>
-        Logout
-      </Button>
-      <Button
-        style={styles.button}
-        textStyle={styles.buttonText}
-        onPress={() => this.props.navigator.push({name: 'rooms'})}>
-        Chat rooms
-      </Button>
-      <Button
-        style={styles.button}
-        textStyle={styles.buttonText}
-        onPress={() => this.props.navigator.push({name: 'stream'})}>
-        Stream
-      </Button>
-      <Button
-        style={styles.button}
-        textStyle={styles.buttonText}
-        onPress={() => this.props.navigator.push({name: 'map'})}>
-        MAP
-      </Button>
+      <View style={styles.container}>
+        <Text style={{fontWeight: 'bold'}}>
+          Welcome {this.props.user.username}
+        </Text>
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.logout()}>
+          Logout
+        </Button>
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.props.navigator.push({name: 'rooms'})}>
+          Chat rooms
+        </Button>
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.props.navigator.push({name: 'stream-publisher'})}>
+          Stream Publisher
+        </Button>
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}>
+          Stream Subscriber
+        </Button>
+        </View>
     </View>);
   }
 
@@ -107,15 +109,25 @@ const styles = StyleSheet.create({
   map: {
     flex: 1
   },
+  buttonContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   button: {
-    borderWidth: 1,
-    borderColor: '#2980b9',
-    backgroundColor: '#3498db',
-    height: 40,
-    margin: 10,
-    padding: 10
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   buttonText: {
-    color: 'white'
-  }
+    backgroundColor: 'transparent',
+    fontSize: 26,
+    color: '#222222',
+    fontWeight: 'bold',
+    textShadowColor: '#4d4d4d',
+    textShadowRadius: 2,
+    textShadowOffset: {
+      width: 2,
+      height: 2
+    },
+    opacity: 0.8
+  },
 });
