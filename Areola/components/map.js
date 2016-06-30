@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  TouchableOpacity,
+  Image
 } from 'react-native';
 
 import Meteor, { createContainer } from 'react-native-meteor';
@@ -13,6 +15,10 @@ class Map extends Component {
 
   constructor() {
     super();
+  }
+
+  logout() {
+    Meteor.logout();
   }
 
   render() {
@@ -29,34 +35,25 @@ class Map extends Component {
       }}>
       {this.renderPoints()}
     </MapView>
-      <View style={styles.container}>
-        <Text style={{fontWeight: 'bold'}}>
-          Welcome {this.props.user.username}
-        </Text>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.logout()}>
-          Logout
-        </Button>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.props.navigator.push({name: 'rooms'})}>
-          Chat rooms
-        </Button>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.props.navigator.push({name: 'stream-publisher'})}>
-          Stream Publisher
-        </Button>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}>
-          Stream Subscriber
-        </Button>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={() => this.logout()}>
+          <Image
+            style={[styles.button, styles.logout]}
+            source={require('../assets/logout.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-publisher'})}>
+          <Image
+            style={[styles.button, styles.publish]}
+            source={require('../assets/publish.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}>
+          <Image
+            style={[styles.button, styles.subscribe]}
+            source={require('../assets/subscribe.png')}
+          />
+        </TouchableOpacity>
         </View>
     </View>);
   }
@@ -98,21 +95,43 @@ export default createContainer(() => {
 
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({location: {$exists: true}}),
-    user: Meteor.user()
+    users: Meteor.collection('users').find({location: {$exists: true}})
   }
 }, Map)
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   map: {
-    flex: 1
-  },
-  buttonContainer: {
     flex: 1,
+  },
+  buttonsContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
     backgroundColor: 'transparent',
+  },
+  logout: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    right: 10,
+    top: 10
+  },
+  subscribe: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    right: 70,
+    top: 10
+  },
+  publish: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    right: 130,
+    top: 10
   },
   button: {
     backgroundColor: 'transparent',

@@ -28,10 +28,6 @@ class Home extends Component {
       </View>);
   }
 
-  logout() {
-    Meteor.logout();
-  }
-
   backgroundVideo() {
     return (!this.props.user) ?
       (<Video
