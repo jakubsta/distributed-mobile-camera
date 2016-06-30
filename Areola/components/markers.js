@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   Text,
-  View
+  View,
+  Alert
 } from 'react-native';
 
 import Meteor, { createContainer } from 'react-native-meteor';
@@ -37,17 +38,52 @@ class Markers extends Component {
     ))
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log("next Props", nextProps);
+
+    switch(nextProps.user.state){
+      case 'requested':
+        Alert.alert(
+          'Streaming request!',
+          'Someone is asking you to share your camera!',
+          [
+            {
+              text: 'Decline',
+              onPress: () => {
+                Meteor.call('updateUserStatus', 'free');
+                Meteor.call('updateUserStatus', 'free', nextProps.user.requestingUserId);
+              }
+            },
+            {
+              text: 'Share',
+              onPress: () => {
+                Meteor.call('updateUserStatus', 'publishing');
+                Meteor.call('updateUserStatus', 'subscribing', nextProps.user.requestingUserId);
+                this.props.navigator.push({name: 'stream-publisher'});
+              }
+            }
+          ]
+        );
+        break;
+      case 'requesting':
+      //kreciolek
+    }
+  }
+
   onUserIconClick(user) {
     Meteor.call('updateUserStatus', 'requesting');
     Meteor.call('setUserAsRequested', user);
   }
+
 }
+
 
 export default createContainer(() => {
   const handler = Meteor.subscribe('users');
 
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({location: {$exists: true}})
+    users: Meteor.collection('users').find({location: {$exists: true}}),
+    user: Meteor.user()
   }
 }, Markers)

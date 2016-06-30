@@ -3,13 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
   TouchableOpacity,
   Image
 } from 'react-native';
 
 import Markers from './markers';
-import Meteor, {createContainer} from 'react-native-meteor';
+import Meteor from 'react-native-meteor';
 import MapView from 'react-native-maps';
 
 export default class Map extends Component {
@@ -55,40 +54,8 @@ export default class Map extends Component {
             source={require('../assets/subscribe.png')}
           />
         </TouchableOpacity>
-        </View>
+      </View>
     </View>);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log("next Props", nextProps);
-
-    switch(nextProps.user.state){
-      case 'requested':
-        Alert.alert(
-          'Streaming request!',
-          'Someone is asking you to share your camera!',
-          [
-            {
-              text: 'Decline',
-              onPress: () => {
-                Meteor.call('updateUserStatus', 'free');
-                Meteor.call('updateUserStatus', 'free', nextProps.user.requestingUserId);
-              }
-            },
-            {
-              text: 'Share',
-              onPress: () => {
-                Meteor.call('updateUserStatus', 'publishing');
-                Meteor.call('updateUserStatus', 'subscribing', nextProps.user.requestingUserId);
-                this.props.navigator.push({name: 'stream-publisher'});
-              }
-            }
-          ]
-        );
-        break;
-      case 'requesting':
-        //kreciolek
-    }
   }
 
   openAddChallengeModal(event) {
@@ -96,12 +63,6 @@ export default class Map extends Component {
     event.stopPropagation();
   }
 }
-
-export default createContainer(() => {
-  return {
-    user: Meteor.user()
-  }
-}, Map)
 
 const styles = StyleSheet.create({
   container: {
