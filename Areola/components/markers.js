@@ -23,26 +23,25 @@ class Markers extends Component {
     return this.props.users.map((user) => (
       <MapView.Marker
         key={user._id}
+        pinColor={user.state === 'streaming' ? 'green' : 'red'}
         coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
 
       >
-        <MapView.Callout style={{width:100, height:50}}>
+        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)}>
           <View>
-            <Text>Add sharing request</Text>
+            <Text>Press tooltip to ask for sharing</Text>
           </View>
         </MapView.Callout>
       </MapView.Marker>
     ))
   }
 
-  onMarkerPress(evt) {
-    console.log("on marker press", evt);
-  }
-
   onUserIconClick(user) {
-    console.log("ping user: ", user);
+    Meteor.call('updateUserStatus', 'requested', () => {
+      console.log("from asking callback");
+    })
   }
 
 

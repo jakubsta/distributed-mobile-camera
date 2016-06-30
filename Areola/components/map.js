@@ -77,35 +77,6 @@ export default class Map extends Component {
     }
   }
 
-  renderPoints() {
-    return this.props.users.map((user) => (
-      <MapView.Marker
-        key={user._id}
-        pinColor={user.state === 'streaming' ? 'green' : 'red'}
-        coordinate={{
-            longitude: user.location.coords.longitude,
-            latitude: user.location.coords.latitude}}
-
-      >
-        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)}>
-          <View>
-            <Text>Press tooltip to ask for sharing</Text>
-          </View>
-        </MapView.Callout>
-      </MapView.Marker>
-    ))
-  }
-
-  onUserIconClick(user) {
-    return e => {
-      console.log("ping user: ", user, e);
-      Meteor.call('updateUserStatus', 'requested', () => {
-        console.log("from asking callback");
-
-      })
-    };
-  }
-
   openAddChallengeModal(event) {
     console.log("long press coordinates", event.nativeEvent.coordinate);
     event.stopPropagation();
