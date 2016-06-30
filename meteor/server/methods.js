@@ -29,7 +29,7 @@ Meteor.methods({
     return Meteor.users.update({_id: userId}, {$set: {state: newStatus}});
   },
   'setUserAsRequested': function(user) {
-    return Meteor.users.update({_id: user._id}, { $set: {state: 'requested', requestingUserId: Meteor.user()._id } });
+    return Meteor.users.update({_id: user}, { $set: {state: 'requested', requestingUserId: Meteor.user()._id } });
   },
   'updateLocation': function (location) {
     const userId = Meteor.userId();
