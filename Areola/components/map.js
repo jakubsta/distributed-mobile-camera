@@ -16,7 +16,8 @@ class Map extends Component {
   }
 
   render() {
-    return (<View style={styles.container}><MapView
+    return (<View style={styles.container}>
+      <MapView
       style={styles.map}
       showsUserLocation={true}
       onLongPress={this.openAddChallengeModal.bind(this)}
@@ -28,6 +29,33 @@ class Map extends Component {
       }}>
       {this.renderPoints()}
     </MapView>
+      <Text style={{fontWeight: 'bold'}}>
+        Welcome {this.props.user.username}
+      </Text>
+      <Button
+        style={styles.button}
+        textStyle={styles.buttonText}
+        onPress={() => this.logout()}>
+        Logout
+      </Button>
+      <Button
+        style={styles.button}
+        textStyle={styles.buttonText}
+        onPress={() => this.props.navigator.push({name: 'rooms'})}>
+        Chat rooms
+      </Button>
+      <Button
+        style={styles.button}
+        textStyle={styles.buttonText}
+        onPress={() => this.props.navigator.push({name: 'stream'})}>
+        Stream
+      </Button>
+      <Button
+        style={styles.button}
+        textStyle={styles.buttonText}
+        onPress={() => this.props.navigator.push({name: 'map'})}>
+        MAP
+      </Button>
     </View>);
   }
 
@@ -67,7 +95,8 @@ export default createContainer(() => {
 
   return {
     status: handler.ready(),
-    users: Meteor.collection('users').find({location: {$exists: true}})
+    users: Meteor.collection('users').find({location: {$exists: true}}),
+    user: Meteor.user()
   }
 }, Map)
 

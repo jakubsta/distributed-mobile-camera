@@ -14,6 +14,12 @@ class Home extends Component {
     super();
   }
 
+  componentDidUpdate() {
+    if (this.props.user) {
+      this.props.navigator.replace({name: 'map'});
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -63,36 +69,8 @@ class Home extends Component {
         </View>);
     }
 
-    return (
-      <View>
-        <Text style={{fontWeight: 'bold'}}>
-          Welcome {this.props.user.username}
-        </Text>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.logout()}>
-          Logout
-        </Button>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.props.navigator.push({name: 'rooms'})}>
-          Chat rooms
-        </Button>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.props.navigator.push({name: 'stream'})}>
-          Stream
-        </Button>
-        <Button
-          style={styles.button}
-          textStyle={styles.buttonText}
-          onPress={() => this.props.navigator.push({name: 'map'})}>
-          MAP
-        </Button>
-      </View>);
+    return null;
+
   }
 }
 
@@ -109,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
-    backgroundColor: 'black'
+    backgroundColor: 'white'
   },
   fullScreen: {
     position: 'absolute',
