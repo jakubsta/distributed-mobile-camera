@@ -72,7 +72,12 @@ function join(roomID) {
 
 function createPC(socketId, isOffer) {
   var pc = new RTCPeerConnection(configuration);
-  closeConnection = pc.close.bind(pc);
+  closeConnection = () => {
+    pc.close.apply(pc);
+    socket.close();
+    Meteor.call('updateUserStatus', 'free');
+    container.props.navigator.replace({name: 'map'});
+  };
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
@@ -115,7 +120,8 @@ function createPC(socketId, isOffer) {
 
     peerConnected();
   };
-  pc.onremovestream = function (event) {
+  pc.onconnectionstatechange = function (a,b,c) {
+    console.log('jest!', a, b, c);
   };
 
   pc.addStream(localStream);
@@ -137,6 +143,7 @@ function createPC(socketId, isOffer) {
     };
 
     dataChannel.onclose = function () {
+      console.log('wywolywany');
     };
 
     pc.textDataChannel = dataChannel;
@@ -188,6 +195,12 @@ function setSocket() {
   });
   socket.on('leave', function (socketId) {
     leave(socketId);
+  });
+
+  socket.on('close', function (socketId) {
+    console.log('test');
+    Meteor.call('updateUserStatus', 'free');
+    container.props.navigator.replace({name: 'map'});
   });
 
   let promise = new Promise((resolve, reject) => {
@@ -263,7 +276,9 @@ class StreamSubscriber extends Component {
 
   componentWillUnmount() {
     console.log('subscriber unmount');
-    // closeConnection();
+     if (closeConnection) {
+       closeConnection();
+     }
   }
 
   clearMessage() {

@@ -70,7 +70,12 @@ function join(roomID) {
 
 function createPC(socketId, isOffer) {
   var pc = new RTCPeerConnection(configuration);
-  closeConnection = pc.close.bind(pc);
+  closeConnection = () => {
+    pc.close.apply(pc);
+    socket.close();
+    Meteor.call('updateUserStatus', 'free');
+    container.props.navigator.replace({name: 'map'});
+  };
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
@@ -176,8 +181,6 @@ function leave(socketId) {
   delete remoteList[socketId];
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
-  Meteor.call('updateUserStatus', 'free');
-  container.props.navigator.replace({name: 'map'});
 }
 function setSocket() {
   socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
@@ -186,6 +189,14 @@ function setSocket() {
   });
   socket.on('leave', function (socketId) {
     leave(socketId);
+  });
+  socket.on('error', (error) => {
+    console.log('error', error);
+  });
+  socket.on('close', function (socketId) {
+    console.log('test');
+    Meteor.call('updateUserStatus', 'free');
+    container.props.navigator.replace({name: 'map'});
   });
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
@@ -260,7 +271,9 @@ export default class StreamPublisher extends Component {
 
   componentWillUnmount() {
     console.log('publisher unmount');
-    // closeConnection();
+    if (closeConnection) {
+      closeConnection();
+    }
   }
 
   clearMessage() {
