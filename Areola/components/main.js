@@ -18,25 +18,21 @@ import StreamSubscriber from './stream-subscriber'
 import Map from './map';
 
 class Chat extends Component {
-
-
   componentDidMount() {
-    /*setInterval(() => {
-      navigator.geolocation.getCurrentPosition((position) => {
-      Meteor.call('updateLocation', position)
-    },
-    (error) => {},
-    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
-    }, 10000);*/
-    navigator.geolocation.getCurrentPosition((position) => {
-        Meteor.call('updateLocation', position)
-      },
-      (error) => {
-        console.log('blad', error);
-      },
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+   const updatePosition = (position) => Meteor.call('updateLocation', position);
+   const logError = (error) => console.log('ERROR!', error);
+
+    navigator.geolocation.getCurrentPosition(
+      updatePosition,
+      logError,
+      {enableHighAccuracy: false, timeout: 200, maximumAge: 1000}
     );
 
+    navigator.geolocation.watchPosition(
+      updatePosition,
+      logError,
+      {enableHighAccuracy: false, timeout: 200, maximumAge: 1000, distanceFilter: 10}
+    );
   }
 
   render() {

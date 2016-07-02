@@ -9,16 +9,13 @@ import {
 } from 'react-native';
 
 import Markers from './markers';
-import Meteor from 'react-native-meteor';
+import Meteor, { createContainer } from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import Button from 'apsl-react-native-button';
 
 export default class Map extends Component {
-
   constructor() {
     super();
-    Meteor.subscribe('users');
-    Meteor.subscribe('challenges');
   }
 
   logout() {
@@ -65,7 +62,7 @@ export default class Map extends Component {
   }
 
   renderMarkers() {
-    return Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }).map((user) => (
+    return this.props.users.map((user) => (
       <MapView.Marker
         key={user._id}
         pinColor={user.state === 'publishing' ? 'green' : 'red'}
@@ -82,7 +79,7 @@ export default class Map extends Component {
   }
   
   renderChallenges() {
-    return Meteor.collection('challenges').find({location: {$exists: true}}).map((challenge) => (
+    return this.props.challanges.map((challenge) => (
       <MapView.Marker
         key={challenge._id}
         pinColor='yellow'
@@ -124,9 +121,19 @@ export default class Map extends Component {
         ]
       );
       event.stopPropagation();
-
   }
 }
+
+export default createContainer((props) => {
+  Meteor.subscribe('users');
+  Meteor.subscribe('challenges');
+
+  return {
+    users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }),
+    challanges: Meteor.collection('challenges').find({location: {$exists: true}}),
+    ...props
+  }
+}, Map)
 
 const styles = StyleSheet.create({
   container: {
