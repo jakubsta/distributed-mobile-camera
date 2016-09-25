@@ -8,16 +8,18 @@ import {
 import Meteor, { createContainer } from 'react-native-meteor';
 import Button from 'apsl-react-native-button';
 import Video from 'react-native-video';
+import Map from './map';
 
 class Home extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   componentDidUpdate() {
-    if (this.props.user) {
+    console.log('Home, props.user', this.props.user);
+    /*if (this.props.user) {
       this.props.navigator.replace({name: 'map'});
-    }
+    }*/
   }
 
   render() {
@@ -33,7 +35,6 @@ class Home extends Component {
       (<Video
         source={{uri: "background"}}
         style={styles.fullScreen}
-        onProgress={this.onProgress}
         rate={1}
         volume={1}
         muted={true}
@@ -62,7 +63,7 @@ class Home extends Component {
         </View>);
     }
 
-    return null;
+    return (<Map></Map>);
 
   }
 }

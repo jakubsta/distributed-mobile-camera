@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Navigator
+  Navigator,
+  StatusBar
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 
@@ -18,38 +19,35 @@ import StreamSubscriber from './stream-subscriber'
 import Map from './map';
 
 class Chat extends Component {
-  componentDidMount() {
-   const updatePosition = (position) => Meteor.call('updateLocation', position);
-   const logError = (error) => console.log('ERROR!', error);
 
-    navigator.geolocation.getCurrentPosition(
-      updatePosition,
-      logError,
-      {enableHighAccuracy: false, timeout: 200, maximumAge: 1000}
-    );
-
-    navigator.geolocation.watchPosition(
-      updatePosition,
-      logError,
-      {enableHighAccuracy: false, timeout: 200, maximumAge: 1000, distanceFilter: 10}
-    );
+  constructor(props){
+    super(props);
   }
 
   render() {
-    if(!this.props.connected) {
-      return (<Text>Connecting to the server</Text>);
+    StatusBar.setBarStyle('light-content');
+
+    if (!this.props.connected) {
+      return (<Text style={styles.connecting}>Connecting to the server...</Text>);
+    }
+
+    if (!this.props.user && this.props.loggingIn) {
+      return (<Text style={styles.connecting}>Logging in user...</Text>);
     }
 
     return (
       <Navigator
-        initialRoute={{name: 'home'}}
+        style={{ flex:1 }}
+        initialRoute={{name: this.props.user ? 'map' : 'login'}}
         configureScene={this.configureScene}
-        renderScene={this.renderScene}/>
+        renderScene={this.renderScene}
+      />
     );
   }
 
+
   renderScene(route, navigator) {
-    switch(route.name) {
+    switch (route.name) {
       case 'home':
         return <Home navigator={navigator} {...route.passProps}/>;
       case 'login':
@@ -70,15 +68,25 @@ class Chat extends Component {
   }
 
   configureScene(route, routeStack) {
-     return Navigator.SceneConfigs.PushFromRight
+    console.log(route, routeStack);
+    return Navigator.SceneConfigs.PushFromRight
   }
 }
 
 export default createContainer(() => {
   return {
-    connected: Meteor.status().connected
+    connected: Meteor.status().connected,
+    user: Meteor.user(),
+    loggingIn: Meteor.loggingIn()
   };
 }, Chat);
 
 const styles = StyleSheet.create({
+  connecting: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    margin: 20,
+  }
 });

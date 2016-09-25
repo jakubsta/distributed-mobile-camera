@@ -9,11 +9,12 @@ import Meteor, { Accounts } from 'react-native-meteor';
 import Button from 'apsl-react-native-button';
 import ReactTimeout from 'react-timeout';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Background from './background';
 
 class Signup extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       username: '',
       email: '',
@@ -32,14 +33,6 @@ class Signup extends Component {
         if (error) {
           return this.setState({status: 'error', message: error.reason});
         }
-        this.props.navigator.push({
-          name: 'map',
-          passProps: {
-            status: 'success',
-            message: 'Account created!',
-            ...this.state
-          }
-        });
       });
     });
   }
@@ -62,38 +55,62 @@ class Signup extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.showMessage.apply(this)}
-        <TextInput
-          placeholder='Email'
-          keyboardType='email-address'
-          style={styles.input}
-          onChangeText={(email) => this.setState({email})}
-          value={this.state.email}
-        />
-        <TextInput
-          placeholder='Username'
-          style={styles.input}
-          onChangeText={(username) => this.setState({username})}
-          value={this.state.username}
-        />
-        <TextInput
-          placeholder='Password'
-          password={true}
-          style={styles.input}
-          onChangeText={(password) => this.setState({password})}
-          value={this.state.password}
-        />
+        <Background />
+        {this.signupForm()}
+      </View>
+    );
+  }
+
+  signupForm() {
+    return (
+      <View style={styles.formContainer}>
+        <View style={styles.title}>
+          <Text style={styles.titleText}>Areola</Text>
+          {this.showMessage.apply(this)}
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder='Email'
+            placeholderTextColor='white'
+            keyboardType='email-address'
+            style={styles.input}
+            onChangeText={(email) => this.setState({email})}
+            value={this.state.email}
+            autoCorrect={false}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder='Username'
+            placeholderTextColor='white'
+            style={styles.input}
+            onChangeText={(username) => this.setState({username})}
+            value={this.state.username}
+            autoCorrect={false}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder='Password'
+            placeholderTextColor='white'
+            password={true}
+            style={styles.input}
+            onChangeText={(password) => this.setState({password})}
+            value={this.state.password}
+          />
+        </View>
         <Button
           style={styles.button}
           textStyle={styles.buttonText}
           onPress={this.createAccount.bind(this)}
         >
-          Singup
+          Sign up
         </Button>
         <KeyboardSpacer/>
       </View>
     );
   }
+
 }
 
 export default ReactTimeout(Signup);
@@ -104,37 +121,76 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
-    margin: 20,
     backgroundColor: 'white'
   },
+  formContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    margin: 20,
+    backgroundColor: 'transparent'
+  },
   input: {
-    textAlign: 'center',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    margin: 10,
-    borderRadius: 7
+    textAlign: 'left',
+    height: 20,
+    marginBottom: 2,
+    marginTop: 20,
+    color: 'white',
+    fontSize: 14,
+    borderWidth: 0,
+  },
+  inputContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
   },
   button: {
-    borderWidth: 1,
-    borderColor: '#2980b9',
-    backgroundColor: '#3498db',
-    height: 40,
+    borderWidth: 0,
+    backgroundColor: '#3498aa',
+    height: 50,
     margin: 10,
-    padding: 10
+    marginTop: 30,
+    padding: 15,
+    borderRadius: 0
   },
   buttonText: {
     color: 'white'
   },
   message: {
-    backgroundColor: '#E0E0E0',
-    height: 60,
-    padding: 5,
-    margin: 10,
-    borderRadius: 7
+    backgroundColor: 'red',
+    height: 30,
+    padding: 3,
+    opacity: 0.4,
+    position: 'absolute',
+    top: 50,
+    left: 5,
+    bottom: 0,
+    right: 5,
   },
   messageText: {
     textAlign: 'center',
-    marginTop: 10
-  }
+    fontSize: 11,
+    fontWeight: 'bold'
+  },
+  title: {
+    backgroundColor: 'transparent',
+    height: 60,
+    margin: 10,
+    borderWidth: 0,
+  },
+  titleText: {
+    textAlign: 'center',
+    marginTop: 10,
+    backgroundColor: 'transparent',
+    fontSize: 34,
+    color: '#222222',
+    fontWeight: 'bold',
+    textShadowColor: '#4d4d4d',
+    textShadowRadius: 2,
+    textShadowOffset: {
+      width: 2,
+      height: 2
+    },
+    opacity: 0.8
+  },
 });

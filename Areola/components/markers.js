@@ -11,8 +11,8 @@ class Markers extends Component {
 
   leaveComponent;
   
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.leaveComponent = false;
   }
 
@@ -22,7 +22,7 @@ class Markers extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (this.leaveComponent) {
+    if (this.leaveComponent || !nextProps.user) {
       return;
     }
     
@@ -65,7 +65,7 @@ class Markers extends Component {
 
 export default createContainer((props) => {
   return {
-    user: Meteor.collection('users').findOne({_id: Meteor.user()._id}, {state:1, requestingUserId:1}),
+    user: Meteor.collection('users').findOne({ _id: Meteor.user() ? Meteor.user()._id : null}, {state:1, requestingUserId:1}),
     ...props
   }
 }, Markers)

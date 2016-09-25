@@ -42,6 +42,8 @@ Meteor.methods({
   'updateLocation': function (location) {
 
     const userId = Meteor.userId();
+
+    console.log('updateLocation', location, userId);
     if (!userId) {
       return;
     }

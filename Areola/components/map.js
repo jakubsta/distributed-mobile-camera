@@ -5,60 +5,104 @@ import {
   View,
   Alert,
   TouchableOpacity,
-  Image
+  Image,
+  StatusBar
 } from 'react-native';
 
 import Markers from './markers';
-import Meteor, { createContainer } from 'react-native-meteor';
+import Meteor, { createContainer, Accounts } from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import Button from 'apsl-react-native-button';
 
 export default class Map extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.watchID = null;
+    this.state = {
+      region: null
+    };
+  }
+
+  componentDidMount() {
+    this.updateUserLocation();
+  }
+
+  updateUserLocation() {
+    const updatePosition = (position) => {
+      if (Meteor.user()) {
+        return Meteor.call('updateLocation', position);
+      }
+    };
+    const logError = (error) => console.log('ERROR!', error);
+
+    console.log('MAP did mount');
+
+    navigator.geolocation.getCurrentPosition((location) => {
+        console.log('MAP current user position', location, 'USER', this.props.user);
+        updatePosition(location);
+        this.setState({
+          region: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.2000,
+            longitudeDelta: 0.0821
+          }
+        });
+      },
+      logError,
+      {enableHighAccuracy: true});
+
+    this.watchID = navigator.geolocation.watchPosition(
+      updatePosition,
+      logError,
+      {enableHighAccuracy: false, timeout: 200, maximumAge: 1000, distanceFilter: 20}
+    );
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   logout() {
+    this.props.navigator.push({name: 'login'});
     Meteor.logout();
   }
 
   render() {
-    return (<View style={styles.container}>
-      <MapView
-        style={styles.map}
-        showsUserLocation={true}
-        onLongPress={this.openAddChallengeModal}
-        initialRegion={{
-          latitude: 51.1079,
-          longitude: 17.0385,
-          latitudeDelta: 0.2000,
-          longitudeDelta: 0.0821
-      }}>
-      <Markers navigator={this.props.navigator}></Markers>
-      {this.renderMarkers()}
-      {this.renderChallenges()}
-      </MapView>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
-          <Image
-            style={styles.button}
-            source={require('../assets/logout.png')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-publisher'})} style={styles.publish}>
-          <Image
-            style={styles.button}
-            source={require('../assets/publish.png')}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})} style={styles.subscribe}>
-          <Image
-            style={styles.button}
-            source={require('../assets/subscribe.png')}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>);
+    StatusBar.setBarStyle('default');
+    return !this.state.region ? (
+      <View style={styles.container}><Text style={{padding:15}}>Loading map...</Text></View>) :
+      (<View style={styles.container}>
+        <MapView
+          style={styles.map}
+          showsUserLocation={true}
+          onLongPress={this.openAddChallengeModal}
+          initialRegion={this.state.region}>
+          <Markers navigator={this.props.navigator}></Markers>
+        </MapView>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>
+            <Image
+              style={styles.button}
+              source={require('../assets/logout.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-publisher'})}
+                            style={styles.publish}>
+            <Image
+              style={styles.button}
+              source={require('../assets/publish.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigator.push({name: 'stream-subscriber'})}
+                            style={styles.subscribe}>
+            <Image
+              style={styles.button}
+              source={require('../assets/subscribe.png')}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>);
   }
 
   renderMarkers() {
@@ -70,14 +114,14 @@ export default class Map extends Component {
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
       >
-        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)} >
+        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)}>
           <Button onPress={this.onUserIconClick(user)}>
             Ask for sharing
           </Button>
         </MapView.Callout>
       </MapView.Marker>));
   }
-  
+
   renderChallenges() {
     return this.props.challanges.map((challenge) => (
       <MapView.Marker
@@ -103,24 +147,25 @@ export default class Map extends Component {
   }
 
   openAddChallengeModal(event) {
-      const longPressedCoords = event.nativeEvent.coordinate;
-      Alert.alert(
-        'Create new challenge!',
-        'Add some coins to earn for your challenge',
-        [
-          {
-            text: 'Decline',
-            onPress: () => {}
-          },
-          {
-            text: 'Create',
-            onPress: () => {
-              Meteor.call('addChallenge', {location: {coords: longPressedCoords}});
-            }
+    const longPressedCoords = event.nativeEvent.coordinate;
+    Alert.alert(
+      'Create new challenge!',
+      'Add some coins to earn for your challenge',
+      [
+        {
+          text: 'Decline',
+          onPress: () => {
           }
-        ]
-      );
-      event.stopPropagation();
+        },
+        {
+          text: 'Create',
+          onPress: () => {
+            Meteor.call('addChallenge', {location: {coords: longPressedCoords}});
+          }
+        }
+      ]
+    );
+    event.stopPropagation();
   }
 }
 
@@ -129,7 +174,8 @@ export default createContainer((props) => {
   Meteor.subscribe('challenges');
 
   return {
-    users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user()._id } }),
+    users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user() ? Meteor.user()._id : null } }),
+    user: Meteor.user(),
     challanges: Meteor.collection('challenges').find({location: {$exists: true}}),
     ...props
   }
