@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   Navigator,
   StatusBar
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
+import Message from './message';
 
 import './connect';
 import Login from './login';
@@ -17,6 +17,8 @@ import Posts from './posts';
 import StreamPublisher from './stream-publisher';
 import StreamSubscriber from './stream-subscriber'
 import Map from './map';
+import Background from './background';
+import Logo from './logo';
 
 class Chat extends Component {
 
@@ -28,11 +30,11 @@ class Chat extends Component {
     StatusBar.setBarStyle('light-content');
 
     if (!this.props.connected) {
-      return (<Text style={styles.connecting}>Connecting to the server...</Text>);
+      return this.showStatusMessage('Connecting to the server...');
     }
 
     if (!this.props.user && this.props.loggingIn) {
-      return (<Text style={styles.connecting}>Logging in user...</Text>);
+      return this.showStatusMessage('Logging in user...');
     }
 
     return (
@@ -45,6 +47,11 @@ class Chat extends Component {
     );
   }
 
+  showStatusMessage(message) {
+    return (
+      <Message message={message}/>
+    );
+  }
 
   renderScene(route, navigator) {
     switch (route.name) {
@@ -80,13 +87,3 @@ export default createContainer(() => {
     loggingIn: Meteor.loggingIn()
   };
 }, Chat);
-
-const styles = StyleSheet.create({
-  connecting: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    margin: 20,
-  }
-});

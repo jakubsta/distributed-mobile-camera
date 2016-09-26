@@ -35,8 +35,6 @@ export default class Map extends Component {
     };
     const logError = (error) => console.log('ERROR!', error);
 
-    console.log('MAP did mount');
-
     navigator.geolocation.getCurrentPosition((location) => {
         console.log('MAP current user position', location, 'USER', this.props.user);
         updatePosition(location);
@@ -50,12 +48,12 @@ export default class Map extends Component {
         });
       },
       logError,
-      {enableHighAccuracy: true});
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 20});
 
     this.watchID = navigator.geolocation.watchPosition(
       updatePosition,
       logError,
-      {enableHighAccuracy: false, timeout: 200, maximumAge: 1000, distanceFilter: 20}
+      {enableHighAccuracy: false, timeout: 20000, maximumAge: 1000, distanceFilter: 20}
     );
   }
 
@@ -71,7 +69,7 @@ export default class Map extends Component {
   render() {
     StatusBar.setBarStyle('default');
     return !this.state.region ? (
-      <View style={styles.container}><Text style={{padding:15}}>Loading map...</Text></View>) :
+      <Message message='Loading map...'/>) :
       (<View style={styles.container}>
         <MapView
           style={styles.map}
@@ -79,6 +77,8 @@ export default class Map extends Component {
           onLongPress={this.openAddChallengeModal}
           initialRegion={this.state.region}>
           <Markers navigator={this.props.navigator}></Markers>
+          {this.renderMarkers()}
+          {this.renderChallenges()}
         </MapView>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={() => this.logout()} style={styles.logout}>

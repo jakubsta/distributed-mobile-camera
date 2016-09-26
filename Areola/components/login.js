@@ -10,17 +10,9 @@ import Button from 'apsl-react-native-button';
 import ReactTimeout from 'react-timeout';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Background from './background';
+import Logo from './logo';
 
 class Login extends Component {
-  componentWillMount() {
-    this.setState(this.props);
-  }
-
-  componentDidMount() {
-      if (this.props.email && this.props.password) {
-        this.logIn();
-      }
-  }
 
   constructor() {
     super();
@@ -36,7 +28,7 @@ class Login extends Component {
   logIn() {
     Meteor.loginWithPassword({email: this.state.email}, this.state.password, (error) => {
       if (error) {
-        return this.setState({status: 'error', message: error.reason});
+        //return this.setState({status: 'error', message: error.reason});
       }
     });
   }
@@ -50,8 +42,10 @@ class Login extends Component {
       this.props.setTimeout(this.clearMessage.bind(this), 3000);
     }
     return !this.state.message ? null : (
-      <View style={styles.message}>
-        <Text style={styles.messageText}>{this.state.message}</Text>
+      <View>
+        <View style={styles.message}>
+          <Text style={styles.messageText}>{this.state.message}</Text>
+        </View>
       </View>
     );
   }
@@ -70,10 +64,8 @@ class Login extends Component {
   loginForm() {
     return (
       <View style={styles.formContainer}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>Areola</Text>
-          {this.showMessage.apply(this)}
-        </View>
+        <Logo/>
+        {this.showMessage.apply(this)}
         <View style={styles.inputContainer}>
           <TextInput
             placeholder='Email'
@@ -176,27 +168,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 11,
     fontWeight: 'bold'
-  },
-  title: {
-    backgroundColor: 'transparent',
-    height: 60,
-    margin: 10,
-    borderWidth: 0,
-  },
-  titleText: {
-    textAlign: 'center',
-    marginTop: 10,
-    backgroundColor: 'transparent',
-    fontSize: 34,
-    color: '#222222',
-    fontWeight: 'bold',
-    textShadowColor: '#4d4d4d',
-    textShadowRadius: 2,
-    textShadowOffset: {
-      width: 2,
-      height: 2
-    },
-    opacity: 0.8
   },
   signup: {
     backgroundColor: 'transparent',

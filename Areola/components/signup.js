@@ -10,6 +10,7 @@ import Button from 'apsl-react-native-button';
 import ReactTimeout from 'react-timeout';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Background from './background';
+import Logo from './logo';
 
 class Signup extends Component {
 
@@ -46,8 +47,10 @@ class Signup extends Component {
       this.props.setTimeout(this.clearMessage.bind(this), 3000);
     }
     return !this.state.message ? null : (
-      <View style={styles.message}>
-        <Text style={styles.messageText}>{this.state.message}</Text>
+      <View>
+        <View style={styles.message}>
+          <Text style={styles.messageText}>{this.state.message}</Text>
+        </View>
       </View>
     );
   }
@@ -64,10 +67,8 @@ class Signup extends Component {
   signupForm() {
     return (
       <View style={styles.formContainer}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>Areola</Text>
-          {this.showMessage.apply(this)}
-        </View>
+        <Logo/>
+        {this.showMessage.apply(this)}
         <View style={styles.inputContainer}>
           <TextInput
             placeholder='Email'
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     padding: 3,
     opacity: 0.4,
     position: 'absolute',
-    top: 50,
+    top: 0,
     left: 5,
     bottom: 0,
     right: 5,
@@ -171,26 +172,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 11,
     fontWeight: 'bold'
-  },
-  title: {
-    backgroundColor: 'transparent',
-    height: 60,
-    margin: 10,
-    borderWidth: 0,
-  },
-  titleText: {
-    textAlign: 'center',
-    marginTop: 10,
-    backgroundColor: 'transparent',
-    fontSize: 34,
-    color: '#222222',
-    fontWeight: 'bold',
-    textShadowColor: '#4d4d4d',
-    textShadowRadius: 2,
-    textShadowOffset: {
-      width: 2,
-      height: 2
-    },
-    opacity: 0.8
   },
 });
