@@ -13,6 +13,7 @@ import Markers from './markers';
 import Meteor, { createContainer, Accounts } from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import Button from 'apsl-react-native-button';
+import Message from './message';
 
 export default class Map extends Component {
   constructor(props) {
