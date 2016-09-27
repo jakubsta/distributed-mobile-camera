@@ -14,6 +14,8 @@ if (!window.navigator.userAgent) {
   window.navigator.userAgent = "react-native";
 }
 
+const WEBRTC_SERVER = 'http://185.5.97.71:4443';
+
 var io = require('socket.io-client/socket.io');
 
 var socket;
@@ -30,8 +32,7 @@ import {
   MediaStreamTrack,
   getUserMedia,
 } from 'react-native-webrtc';
-
-
+import Message from './message';
 
 
 var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
@@ -188,7 +189,7 @@ function leave(socketId) {
   container.props.navigator.replace({name: 'map'});
 }
 function setSocket() {
-  socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
+  socket = io.connect(WEBRTC_SERVER, {transports: ['websocket']});
 
   socket.on('exchange', function (data) {
     exchange(data);
@@ -276,9 +277,13 @@ class StreamSubscriber extends Component {
 
   componentWillUnmount() {
     console.log('subscriber unmount');
-     if (closeConnection) {
-       closeConnection();
-     }
+     this.closeConnection();
+  }
+
+  closeConnection() {
+    if (closeConnection) {
+      closeConnection();
+    }
   }
 
   clearMessage() {
@@ -299,11 +304,7 @@ class StreamSubscriber extends Component {
     if(remoteStream) {
       return (<RTCView key={this.state.remoteSocketId} streamURL={this.state.remoteStream} style={styles.video}/>)
     } else {
-      return (<View>
-        <Text style={{fontWeight: 'bold'}}>
-          Connecting...
-        </Text>
-      </View>)
+      return (<Message message='Connecting...'/>)
     }
   }
 

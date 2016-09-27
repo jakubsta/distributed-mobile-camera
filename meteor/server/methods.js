@@ -1,20 +1,12 @@
 import {Meteor} from 'meteor/meteor';
 
-import {Rooms} from '../collections/rooms';
+import {Channels} from '../collections/channels';
 import {Posts} from '../collections/posts';
 import {Challenge} from '../collections/challenges';
 import Geohash from 'ngeohash';
 
 Meteor.methods({
 
-  'addRoom': function (title, description) {
-    Rooms.insert({
-      title,
-      description,
-      creationDate: new Date()
-    })
-  },
-  
   'addChallenge': function (challenge) {
     Challenge.insert(challenge);
   },
@@ -43,7 +35,6 @@ Meteor.methods({
 
     const userId = Meteor.userId();
 
-    console.log('updateLocation', location, userId);
     if (!userId) {
       return;
     }
@@ -56,5 +47,27 @@ Meteor.methods({
         location
       }
     });
-  }
+  },
+  'createChannel': function(userId) {
+    const user = Meteor.user();
+
+    if (!user) {
+      return;
+    }
+
+    Channels.insert({
+      subscriber: user._id,
+      publisher: userId,
+      status: 'pending',
+      creationDate: new Date()
+    });
+  },
+
+  'removeChannel': function(_id) {
+    Channels.remove({_id});
+  },
+
+  'startStreaming': function(_id) {
+    Channels.update({_id}, {$set: {status: 'streaming'}});
+  },
 });

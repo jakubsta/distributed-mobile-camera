@@ -9,23 +9,34 @@ import {
   StatusBar
 } from 'react-native';
 
-import Markers from './markers';
 import Meteor, { createContainer, Accounts } from 'react-native-meteor';
 import MapView from 'react-native-maps';
 import Button from 'apsl-react-native-button';
 import Message from './message';
 
-export default class Map extends Component {
-  constructor(props) {
-    super(props);
+const PUBLISHING = 'green';
+const FREE = 'blue';
+const DEFAULT = 'red';
+
+class Map extends Component {
+  constructor() {
+    super();
     this.watchID = null;
     this.state = {
       region: null
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.listenStartStreaming();
+    this.listenStartRecieving();
+  }
+
   componentDidMount() {
+    this.listenStartStreaming();
+    this.listenStartRecieving();
     this.updateUserLocation();
+    Meteor.call('updateUserStatus', 'free'); //@TODO here we can handle user default status eg. hidden
   }
 
   updateUserLocation() {
@@ -37,7 +48,6 @@ export default class Map extends Component {
     const logError = (error) => console.log('ERROR!', error);
 
     navigator.geolocation.getCurrentPosition((location) => {
-        console.log('MAP current user position', location, 'USER', this.props.user);
         updatePosition(location);
         this.setState({
           region: {
@@ -60,6 +70,7 @@ export default class Map extends Component {
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
+    Meteor.call('updateUserStatus', 'free'); //@TODO here we can handle user default status eg. hidden
   }
 
   logout() {
@@ -69,7 +80,11 @@ export default class Map extends Component {
 
   render() {
     StatusBar.setBarStyle('default');
-    return !this.state.region ? (
+    this.listenStreamingRequests();
+    this.listenStartStreaming();
+    this.listenStartRecieving();
+
+    return !this.state.region && false ? (
       <Message message='Loading map...'/>) :
       (<View style={styles.container}>
         <MapView
@@ -77,7 +92,6 @@ export default class Map extends Component {
           showsUserLocation={true}
           onLongPress={this.openAddChallengeModal}
           initialRegion={this.state.region}>
-          <Markers navigator={this.props.navigator}></Markers>
           {this.renderMarkers()}
           {this.renderChallenges()}
         </MapView>
@@ -107,20 +121,33 @@ export default class Map extends Component {
   }
 
   renderMarkers() {
-    return this.props.users.map((user) => (
-      <MapView.Marker
-        key={user._id}
-        pinColor={user.state === 'publishing' ? 'green' : 'red'}
-        coordinate={{
+    return this.props.users.map((user) => {
+      let message = `Ask for sharing ${user.username}`;
+      return (
+        <MapView.Marker
+          key={user._id}
+          pinColor={this.getMarkerColor(user.state)}
+          coordinate={{
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
-      >
-        <MapView.Callout style={{width:200, height:60}} onPress={this.onUserIconClick(user)}>
-          <Button onPress={this.onUserIconClick(user)}>
-            Ask for sharing
-          </Button>
-        </MapView.Callout>
-      </MapView.Marker>));
+        >
+          <MapView.Callout style={{width:200, height:60}}>
+            <Button onPress={this.askForStreaming(user)}>{message}</Button>
+          </MapView.Callout>
+        </MapView.Marker>
+      );
+    });
+  }
+
+  getMarkerColor(state) {
+    switch (state) {
+      case 'publishing':
+        return PUBLISHING;
+      case 'free':
+        return FREE;
+      default:
+        return DEFAULT;
+    }
   }
 
   renderChallenges() {
@@ -141,9 +168,9 @@ export default class Map extends Component {
     ))
   }
 
-  onUserIconClick(user) {
+  askForStreaming(user) {
     return () => {
-      Meteor.call('setUserAsRequested', user._id);
+      Meteor.call('createChannel', user._id);
     }
   }
 
@@ -161,26 +188,93 @@ export default class Map extends Component {
         {
           text: 'Create',
           onPress: () => {
-            Meteor.call('addChallenge', {location: {coords: longPressedCoords}});
+            //Meteor.call('addChallenge', {location: {coords: longPressedCoords}});
           }
         }
       ]
     );
     event.stopPropagation();
   }
+
+  streamingRequest(channel) {
+    console.log(channel);
+    Alert.alert(
+      'Streaming request!',
+      'Someone is asking you to share your camera!',
+      [
+        {
+          text: 'Decline',
+          onPress: () => {
+            Meteor.call('updateUserStatus', 'free', channel.publisher);
+            Meteor.call('updateUserStatus', 'free', channel.subscriber);
+            Meteor.call('removeChannel', channel._id);
+            setTimeout(() => {
+              //this is the time for meteor to refresh channel status by meteor to "free"
+            }, 5000);
+          }
+        },
+        {
+          text: 'Share',
+          onPress: () => {
+            Meteor.call('updateUserStatus', 'publishing', channel.publisher);
+            Meteor.call('updateUserStatus', 'subscribing', channel.subscriber);
+            Meteor.call('startStreaming', channel._id);
+            setTimeout(() => {
+              //this is the time for meteor to refresh channel status by meteor to "steraming"
+            }, 5000);
+          }
+        }
+      ]
+    );
+  }
+
+  listenStreamingRequests() {
+    console.log('streamingRequest', this.props.streamingRequest);
+    if (this.props.streamingRequest.length > 0) {
+      this.streamingRequest(this.props.streamingRequest[0]);
+    }
+  }
+
+  listenStartStreaming() {
+    console.log('liveStreaming', this.props.liveStreaming);
+    if (this.props.liveStreaming.length > 0) {
+      this.startStreaming(this.props.liveStreaming[0]);
+    }
+  }
+
+  startStreaming(channel) {
+      this.props.navigator.replace({name: 'stream-publisher', passProps: {channel}});
+  }
+
+  startRecieving(channel) {
+    this.props.navigator.replace({name: 'stream-subscriber', passProps: {channel}});
+  }
+
+  listenStartRecieving() {
+    console.log('liveRecieving', this.props.liveRecieving);
+    if (this.props.liveRecieving.length > 0) {
+      this.startRecieving(this.props.liveRecieving[0]);
+    }
+  }
 }
 
 export default createContainer((props) => {
   Meteor.subscribe('users');
   Meteor.subscribe('challenges');
+  Meteor.subscribe('channels');
+
+  const userId = Meteor.user() ? Meteor.user()._id : null;
 
   return {
-    users: Meteor.collection('users').find({location: {$exists: true}, _id: { $ne: Meteor.user() ? Meteor.user()._id : null } }),
+    users: Meteor.collection('users').find({location: {$exists: true}, _id: {$ne: userId}}),
     user: Meteor.user(),
     challanges: Meteor.collection('challenges').find({location: {$exists: true}}),
+    streamingRequest: Meteor.collection('channels').find({publisher: userId, status: 'pending'}),
+    liveStreaming: Meteor.collection('channels').find({publisher: userId, status: 'streaming'}).sort({creationDate: -1}),
+    liveRecieving: Meteor.collection('channels').find({subscriber: userId, status: 'streaming'}).sort({creationDate: -1}),
     ...props
   }
-}, Map)
+}, Map);
 
 const styles = StyleSheet.create({
   container: {

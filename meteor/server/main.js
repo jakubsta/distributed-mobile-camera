@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
 import '../collections/users';
-import './rooms';
+import './channels';
 import './posts';
 import './users';
 import './methods';

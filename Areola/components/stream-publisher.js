@@ -16,6 +16,8 @@ if (!window.navigator.userAgent) {
   window.navigator.userAgent = "react-native";
 }
 
+const WEBRTC_SERVER = 'http://185.5.97.71:4443';
+
 var io = require('socket.io-client/socket.io');
 
 var socket;
@@ -183,7 +185,7 @@ function leave(socketId) {
   container.setState({info: 'One peer leave!'});
 }
 function setSocket() {
-  socket = io.connect('http://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
+  socket = io.connect(WEBRTC_SERVER, {transports: ['websocket']});
   socket.on('exchange', function (data) {
     exchange(data);
   });
