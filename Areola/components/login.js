@@ -126,16 +126,13 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center',
     margin: 20,
-    backgroundColor: 'transparent'
   },
   input: {
-    textAlign: 'left',
-    height: 20,
+    textAlign: 'center',
     marginBottom: 2,
     marginTop: 20,
-    color: 'white',
-    fontSize: 14,
     borderWidth: 0,
+    color: 'white'
   },
   inputContainer: {
     borderBottomWidth: 1,

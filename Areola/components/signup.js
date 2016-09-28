@@ -133,8 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   input: {
-    textAlign: 'left',
-    height: 20,
+    textAlign: 'center',
     marginBottom: 2,
     marginTop: 20,
     color: 'white',
