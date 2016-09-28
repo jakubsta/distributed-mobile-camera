@@ -134,8 +134,8 @@ class Map extends Component {
             longitude: user.location.coords.longitude,
             latitude: user.location.coords.latitude}}
         >
-          <MapView.Callout style={{width:200, height:60}}>
-            <Button onPress={this.askForStreaming(user)}>{message}</Button>
+          <MapView.Callout style={{width:200, height:60}} onPress={() => {this.askForStreaming(user)}}>
+            <Button >{message}</Button>
           </MapView.Callout>
         </MapView.Marker>
       );
@@ -172,9 +172,7 @@ class Map extends Component {
   }
 
   askForStreaming(user) {
-    return () => {
-      Meteor.call('createChannel', user._id);
-    }
+    Meteor.call('createChannel', user._id);
   }
 
   openAddChallengeModal(event) {
