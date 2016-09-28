@@ -3,7 +3,8 @@ import {
   Text,
   View,
   Navigator,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import Meteor, { createContainer } from 'react-native-meteor';
 import Message from './message';
@@ -27,8 +28,9 @@ class Chat extends Component {
   }
 
   render() {
-    StatusBar.setBarStyle('light-content');
-
+    if (Platform.OS === 'ios') {
+      StatusBar.setBarStyle('light-content');
+    }
     if (!this.props.connected) {
       return this.showStatusMessage('Connecting to the server...');
     }

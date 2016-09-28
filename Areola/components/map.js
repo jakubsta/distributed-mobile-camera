@@ -6,7 +6,8 @@ import {
   Alert,
   TouchableOpacity,
   Image,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 
 import Meteor, { createContainer, Accounts } from 'react-native-meteor';
@@ -79,7 +80,9 @@ class Map extends Component {
   }
 
   render() {
-    StatusBar.setBarStyle('default');
+    if (Platform.OS === 'ios') {
+      StatusBar.setBarStyle('default');
+    }
     this.listenStreamingRequests();
     this.listenStartStreaming();
     this.listenStartRecieving();
