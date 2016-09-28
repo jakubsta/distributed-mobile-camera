@@ -1,6 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 
 import {Channels} from '../collections/channels';
+import {Requests} from '../collections/requests';
+
 import {Posts} from '../collections/posts';
 import {Challenge} from '../collections/challenges';
 import Geohash from 'ngeohash';
@@ -25,11 +27,16 @@ Meteor.methods({
       submitDate: new Date()
     });
   },
-  'updateUserStatus': function(newStatus, userId = (Meteor.user() || {})._id ) {
+  'updateUserStatus': function (newStatus, userId = (Meteor.user() || {})._id) {
     return Meteor.users.update({_id: userId}, {$set: {state: newStatus}});
   },
-  'setUserAsRequested': function(userId) {
-    return Meteor.users.update({_id: userId}, { $set: {state: 'requested', requestingUserId: (Meteor.user() || {})._id } });
+  'setUserAsRequested': function (userId) {
+    return Meteor.users.update({_id: userId}, {
+      $set: {
+        state: 'requested',
+        requestingUserId: (Meteor.user() || {})._id
+      }
+    });
   },
   'updateLocation': function (location) {
 
@@ -48,7 +55,7 @@ Meteor.methods({
       }
     });
   },
-  'createChannel': function(userId) {
+  'createChannel': function (userId) {
     const user = Meteor.user();
 
     if (!user) {
@@ -56,18 +63,35 @@ Meteor.methods({
     }
 
     Channels.insert({
+      subscriber: userId,
+      publisher: user._id,
+      creationDate: new Date()
+    });
+
+    Meteor.users.update({_id: user._id}, {$set: {state: 'subscriber'}});
+    Meteor.users.update({_id: userId}, {$set: {state: 'publisher'}});
+
+  },
+
+  'removeChannel': function (_id) {
+    Channels.remove({_id});
+  },
+  'createRequest': function (userId) {
+    const user = Meteor.user();
+
+    if (!user) {
+      return;
+    }
+
+    Requests.insert({
       subscriber: user._id,
       publisher: userId,
-      status: 'pending',
       creationDate: new Date()
     });
   },
 
-  'removeChannel': function(_id) {
-    Channels.remove({_id});
-  },
+  'removeRequest': function (_id) {
+    Requests.remove({_id});
+  }
 
-  'startStreaming': function(_id) {
-    Channels.update({_id}, {$set: {status: 'streaming'}});
-  },
 });

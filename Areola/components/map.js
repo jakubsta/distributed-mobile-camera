@@ -74,6 +74,12 @@ class Map extends Component {
     Meteor.call('updateUserStatus', 'free'); //@TODO here we can handle user default status eg. hidden
   }
 
+  componentDidUpdate(){
+    this.listenStreamingRequests();
+    this.listenStartStreaming();
+    this.listenStartRecieving();
+  }
+
   logout() {
     this.props.navigator.push({name: 'login'});
     Meteor.logout();
@@ -83,9 +89,8 @@ class Map extends Component {
     if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('default');
     }
-    this.listenStreamingRequests();
-    this.listenStartStreaming();
-    this.listenStartRecieving();
+
+
 
     return !this.state.region && false ? (
       <Message message='Loading map...'/>) :
@@ -172,7 +177,7 @@ class Map extends Component {
   }
 
   askForStreaming(user) {
-    Meteor.call('createChannel', user._id);
+    Meteor.call('createRequest', user._id);
   }
 
   openAddChallengeModal(event) {
@@ -197,8 +202,10 @@ class Map extends Component {
     event.stopPropagation();
   }
 
-  streamingRequest(channel) {
-    console.log(channel);
+  streamingRequest(request) {
+    console.log(request);
+    Meteor.call('removeRequest', request._id);
+
     Alert.alert(
       'Streaming request!',
       'Someone is asking you to share your camera!',
@@ -206,23 +213,16 @@ class Map extends Component {
         {
           text: 'Decline',
           onPress: () => {
-            Meteor.call('updateUserStatus', 'free', channel.publisher);
-            Meteor.call('updateUserStatus', 'free', channel.subscriber);
-            Meteor.call('removeChannel', channel._id);
-            setTimeout(() => {
-              //this is the time for meteor to refresh channel status by meteor to "free"
-            }, 5000);
-          }
+            Meteor.call('updateUserStatus', 'free', request.publisher);
+            Meteor.call('updateUserStatus', 'free', request.subscriber);
+  }
         },
         {
           text: 'Share',
           onPress: () => {
-            Meteor.call('updateUserStatus', 'publishing', channel.publisher);
-            Meteor.call('updateUserStatus', 'subscribing', channel.subscriber);
-            Meteor.call('startStreaming', channel._id);
-            setTimeout(() => {
-              //this is the time for meteor to refresh channel status by meteor to "steraming"
-            }, 5000);
+            // Meteor.call('updateUserStatus', 'publishing', request.publisher);
+            // Meteor.call('updateUserStatus', 'subscribing', request.subscriber);
+            Meteor.call('createChannel', request.subscriber);
           }
         }
       ]
@@ -263,6 +263,7 @@ export default createContainer((props) => {
   Meteor.subscribe('users');
   Meteor.subscribe('challenges');
   Meteor.subscribe('channels');
+  Meteor.subscribe('requests');
 
   const userId = Meteor.user() ? Meteor.user()._id : null;
 
@@ -270,9 +271,9 @@ export default createContainer((props) => {
     users: Meteor.collection('users').find({location: {$exists: true}, _id: {$ne: userId}}),
     user: Meteor.user(),
     challanges: Meteor.collection('challenges').find({location: {$exists: true}}),
-    streamingRequest: Meteor.collection('channels').find({publisher: userId, status: 'pending'}),
-    liveStreaming: Meteor.collection('channels').find({publisher: userId, status: 'streaming'}).sort({creationDate: -1}),
-    liveRecieving: Meteor.collection('channels').find({subscriber: userId, status: 'streaming'}).sort({creationDate: -1}),
+    streamingRequest: Meteor.collection('requests').find({publisher: userId}).sort({creationDate: -1}),
+    liveStreaming: Meteor.collection('channels').find({publisher: userId}).sort({creationDate: -1}),
+    liveRecieving: Meteor.collection('channels').find({subscriber: userId}).sort({creationDate: -1}),
     ...props
   }
 }, Map);
