@@ -6,11 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react": "15.1.0",
-    "react-native": "0.28.0",
     "apsl-react-native-button": "2.5.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
     "chroma-js": "1.1.1",
     "momentjs": "1.1.10",
+    "react": "15.1.0",
+    "react-native": "0.28.0",
     "react-native-action-button": "1.1.9",
     "react-native-keyboard-spacer": "0.3.0",
     "react-native-maps": "0.6.0",
