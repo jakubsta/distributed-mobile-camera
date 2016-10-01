@@ -18,8 +18,10 @@ const WEBRTC_SERVER = 'http://185.5.97.71:4443';
 
 var io = require('socket.io-client/socket.io');
 
-var socket;
-var roomId = 'aaa';
+
+let socket;
+let roomId = 'aaa';
+
 var closeConnection;
 
 import {
@@ -37,15 +39,16 @@ import Message from './message';
 
 var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 
-var pcPeers = {};
-var localStream;
+const pcPeers = {};
+let localStream;
 let remoteStream;
 
 function getLocalStream(isFront, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
-    var videoSourceId;
-    for (var i = 0; i < sourceInfos.length; i++) {
-      var sourceInfo = sourceInfos[i];
+    console.log(sourceInfos);
+    let videoSourceId;
+    for (const i = 0; i < sourceInfos.length; i++) {
+      const sourceInfo = sourceInfos[i];
       if(sourceInfo.kind == "video" && sourceInfo.facing == (isFront ? "front" : "back")) {
         videoSourceId = sourceInfo.id;
       }
@@ -56,32 +59,29 @@ function getLocalStream(isFront, callback) {
         optional: [{sourceId: videoSourceId}]
       }
     }, function (stream) {
+      console.log('dddd', stream);
       callback(stream);
     }, logError);
   });
 }
 
 function join(roomID) {
+  console.log('join')
   socket.emit('join', roomID, function(socketIds){
-    for (var i in socketIds) {
-      var socketId = socketIds[i];
-      // debugger;
+    console.log('join', socketIds);
+    for (const i in socketIds) {
+      const socketId = socketIds[i];
       createPC(socketId, true);
     }
   });
 }
 
 function createPC(socketId, isOffer) {
-  var pc = new RTCPeerConnection(configuration);
-  closeConnection = () => {
-    pc.close.apply(pc);
-    socket.close();
-    Meteor.call('updateUserStatus', 'free');
-    container.props.navigator.replace({name: 'map'});
-  };
+  const pc = new RTCPeerConnection(configuration);
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
+    console.log('onicecandidate', event.candidate);
     if (event.candidate) {
       socket.emit('exchange', {'to': socketId, 'candidate': event.candidate });
     }
@@ -89,40 +89,40 @@ function createPC(socketId, isOffer) {
 
   function createOffer() {
     pc.createOffer(function(desc) {
+      console.log('createOffer', desc);
       pc.setLocalDescription(desc, function () {
+        console.log('setLocalDescription', pc.localDescription);
         socket.emit('exchange', {'to': socketId, 'sdp': pc.localDescription });
       }, logError);
     }, logError);
   }
 
   pc.onnegotiationneeded = function () {
+    console.log('onnegotiationneeded');
     if (isOffer) {
       createOffer();
     }
   }
 
   pc.oniceconnectionstatechange = function(event) {
-    if (event.target.iceConnectionState === 'completed') {
-      setTimeout(() => {
-        // getStats();
-      }, 1000);
-    }
+    console.log('oniceconnectionstatechange', event.target.iceConnectionState);
+
     if (event.target.iceConnectionState === 'connected') {
       createDataChannel();
     }
   };
   pc.onsignalingstatechange = function(event) {
+    console.log('onsignalingstatechange', event.target.signalingState);
   };
 
   pc.onaddstream = function (event) {
-    remoteStream = true;
+    console.log('onaddstream')
     container.setState({remoteStream: event.stream.toURL()});
     container.setState({remoteSocketId: socketId});
 
-    peerConnected();
   };
-  pc.onconnectionstatechange = function (a,b,c) {
-    console.log('jest!', a, b, c);
+  pc.onremovestream = function (event) {
+    console.log('onremovestream', event.stream);
   };
 
   pc.addStream(localStream);
@@ -130,21 +130,24 @@ function createPC(socketId, isOffer) {
     if (pc.textDataChannel) {
       return;
     }
-    var dataChannel = pc.createDataChannel("text");
+    const dataChannel = pc.createDataChannel("text");
 
     dataChannel.onerror = function (error) {
+      console.log("dataChannel.onerror", error);
     };
 
     dataChannel.onmessage = function (event) {
+      console.log("dataChannel.onmessage:", event.data);
       container.receiveTextData({user: socketId, message: event.data});
     };
 
     dataChannel.onopen = function () {
+      console.log('dataChannel.onopen');
       container.setState({textRoomConnected: true});
     };
 
     dataChannel.onclose = function () {
-      console.log('wywolywany');
+      console.log("dataChannel.onclose");
     };
 
     pc.textDataChannel = dataChannel;
@@ -153,101 +156,82 @@ function createPC(socketId, isOffer) {
 }
 
 function exchange(data) {
-  var fromId = data.from;
-  var pc;
+  const fromId = data.from;
+  let pc;
   if (fromId in pcPeers) {
     pc = pcPeers[fromId];
   } else {
+    console.log('createPC')
     pc = createPC(fromId, false);
   }
 
   if (data.sdp) {
+    console.log('exchange sdp', data);
     pc.setRemoteDescription(new RTCSessionDescription(data.sdp), function () {
       if (pc.remoteDescription.type == "offer")
         pc.createAnswer(function(desc) {
+          console.log('createAnswer', desc);
           pc.setLocalDescription(desc, function () {
+            console.log('setLocalDescription', pc.localDescription);
             socket.emit('exchange', {'to': fromId, 'sdp': pc.localDescription });
           }, logError);
         }, logError);
     }, logError);
   } else {
+    console.log('exchange candidate', data);
     pc.addIceCandidate(new RTCIceCandidate(data.candidate));
   }
 }
 
 function leave(socketId) {
-  var pc = pcPeers[socketId];
-  var viewIndex = pc.viewIndex;
+  console.log('leave', socketId);
+  const pc = pcPeers[socketId];
+  const viewIndex = pc.viewIndex;
   pc.close();
   delete pcPeers[socketId];
 
-  var remoteList = container.state.remoteList;
+  const remoteList = container.state.remoteList;
   delete remoteList[socketId]
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
-  Meteor.call('updateUserStatus', 'free');
-  container.props.navigator.replace({name: 'map'});
 }
+
 function setSocket() {
   socket = io.connect(WEBRTC_SERVER, {transports: ['websocket']});
-
   socket.on('exchange', function (data) {
     exchange(data);
   });
   socket.on('leave', function (socketId) {
     leave(socketId);
   });
-
+  socket.on('error', (error) => {
+    console.log('error', error);
+  });
   socket.on('close', function (socketId) {
     console.log('test');
     Meteor.call('updateUserStatus', 'free');
     container.props.navigator.replace({name: 'map'});
   });
-
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
-      getLocalStream(false, function (stream) {
+      console.log('connect');
+      getLocalStream(false, function(stream) {
         localStream = stream;
         container.setState({selfViewSrc: stream.toURL()});
         container.setState({status: 'ready', info: 'Please enter or create room ID'});
         resolve();
+
       });
     });
   });
   return promise;
 }
+
 function logError(error) {
+  console.log("logError", error);
 }
 
-function mapHash(hash, func) {
-  var array = [];
-  for (var key in hash) {
-    var obj = hash[key];
-    array.push(func(obj, key));
-  }
-  return array;
-}
-
-function peerConnected() {
-  // RTCSetting.setAudioOutput('speaker');
-  // RTCSetting.setKeepScreenOn(true);
-  // RTCSetting.setProximityScreenOff(true);
-}
-
-function getStats() {
-  var pc = pcPeers[Object.keys(pcPeers)[0]];
-  if (!pc || !pc.getRemoteStreams()) {
-    container.props.navigator.replace({name: 'map'});
-    return;
-  }
-  if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
-    var track = pc.getRemoteStreams()[0].getAudioTracks()[0];
-    pc.getStats(track, function(report) {
-    }, logError);
-  }
-}
-
-var container;
+let container;
 
 class StreamSubscriber extends Component {
 
@@ -308,10 +292,22 @@ class StreamSubscriber extends Component {
     }
   }
 
+  close() {
+
+  }
+
   render() {
+    console.log('state', this.state)
     return (
       <View style={styles.container}>
         {this.renderRemote(this.state.remoteStream)}
+        <Button
+          style={styles.button}
+          textStyle={styles.buttonText}
+          onPress={() => this.close()}
+        >
+          Close
+          </Button>
       </View>
     );
   }
@@ -342,5 +338,17 @@ const styles = StyleSheet.create({
   messageText: {
     textAlign: 'center',
     marginTop: 10
-  }
+  },
+  button: {
+    position: 'absolute',
+    borderWidth: 0  ,
+    backgroundColor: '#3498aa',
+    height: 50,
+    padding: 15,
+    borderRadius: 0,
+    bottom: 0
+  },
+  buttonText: {
+    color: 'white'
+  },
 });
