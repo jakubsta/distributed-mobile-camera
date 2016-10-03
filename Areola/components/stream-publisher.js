@@ -23,8 +23,7 @@ var io = require('socket.io-client/socket.io');
 
 let socket;
 let roomId = 'aaa';
-
-var closeConnection;
+let globalClose;
 
 import {
   RTCPeerConnection,
@@ -59,7 +58,6 @@ function getLocalStream(isFront, callback) {
         optional: [{sourceId: videoSourceId}]
       }
     }, function (stream) {
-      console.log('dddd', stream);
       callback(stream);
     }, logError);
   });
@@ -67,7 +65,6 @@ function getLocalStream(isFront, callback) {
 
 function join(roomID) {
   socket.emit('join', roomID, function(socketIds){
-    console.log('join', socketIds);
     for (const i in socketIds) {
       const socketId = socketIds[i];
       createPC(socketId, true);
@@ -186,12 +183,11 @@ function exchange(data) {
 function leave(socketId) {
   console.log('leave', socketId);
   const pc = pcPeers[socketId];
-  const viewIndex = pc.viewIndex;
   pc.close();
   delete pcPeers[socketId];
 
   const remoteList = container.state.remoteList;
-  delete remoteList[socketId]
+  delete remoteList[socketId];
   container.setState({ remoteList: remoteList });
   container.setState({info: 'One peer leave!'});
 }
@@ -203,18 +199,14 @@ function setSocket() {
   });
   socket.on('leave', function (socketId) {
     leave(socketId);
+    globalClose();
   });
   socket.on('error', (error) => {
     console.log('error', error);
   });
-  socket.on('close', function (socketId) {
-    console.log('test');
-    Meteor.call('updateUserStatus', 'free');
-    container.props.navigator.replace({name: 'map'});
-  });
+
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
-      console.log('connect');
       getLocalStream(false, function(stream) {
         localStream = stream;
         container.setState({selfViewSrc: stream.toURL()});
@@ -253,14 +245,8 @@ export default class StreamPublisher extends Component {
     container = this;
     setSocket().then(()=>{
       join(roomId);
+      globalClose = this.close.bind(this);
     });
-  }
-
-  componentWillUnmount() {
-    console.log('publisher unmount');
-    if (closeConnection) {
-      closeConnection();
-    }
   }
 
   clearMessage() {
@@ -279,7 +265,19 @@ export default class StreamPublisher extends Component {
   }
 
   close() {
+    if (localStream) {
+      for (const id in pcPeers) {
+        const pc = pcPeers[id];
+        pc && pc.removeStream(localStream);
+      }
+      localStream.release();
+      localStream = undefined;
+    }
 
+    socket.disconnect();
+    socket.close()
+    Meteor.call('removeChannel', this.props.channel._id);
+    container.props.navigator.replace({name: 'map'});
   }
 
   render() {
@@ -298,13 +296,6 @@ export default class StreamPublisher extends Component {
   </View>
     );
   }
-/*<TouchableOpacity onPress={() => closeConnection()} style={styles.close}>
-<Image
-style={styles.button}
-source={require('../assets/close.png')}
-/>
-</TouchableOpacity>*/
-
 }
 
 const styles = StyleSheet.create({
