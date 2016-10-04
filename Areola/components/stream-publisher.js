@@ -24,7 +24,7 @@ var io = require('socket.io-client/socket.io');
 let socket;
 let roomId = 'aaa';
 let globalClose;
-
+let streams = [];
 import {
   RTCPeerConnection,
   RTCMediaStream,
@@ -41,7 +41,7 @@ var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 
 const pcPeers = {};
 let localStream;
-
+let a = false;
 function getLocalStream(isFront, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
     console.log(sourceInfos);
@@ -64,11 +64,14 @@ function getLocalStream(isFront, callback) {
 }
 
 function join(roomID) {
+  console.info('join...')
   socket.emit('join', roomID, function(socketIds){
     for (const i in socketIds) {
       const socketId = socketIds[i];
       createPC(socketId, true);
     }
+    console.info('joined')
+
   });
 }
 
@@ -117,6 +120,7 @@ function createPC(socketId, isOffer) {
 
     const remoteList = container.state.remoteList;
     remoteList[socketId] = event.stream.toURL();
+    streams.push(event.stream);
     container.setState({ remoteList: remoteList });
   };
   pc.onremovestream = function (event) {
@@ -163,26 +167,22 @@ function exchange(data) {
   }
 
   if (data.sdp) {
-    console.log('exchange sdp', data);
     pc.setRemoteDescription(new RTCSessionDescription(data.sdp), function () {
       if (pc.remoteDescription.type == "offer")
         pc.createAnswer(function(desc) {
-          console.log('createAnswer', desc);
           pc.setLocalDescription(desc, function () {
-            console.log('setLocalDescription', pc.localDescription);
             socket.emit('exchange', {'to': fromId, 'sdp': pc.localDescription });
           }, logError);
         }, logError);
     }, logError);
   } else {
-    console.log('exchange candidate', data);
     pc.addIceCandidate(new RTCIceCandidate(data.candidate));
   }
 }
 
 function leave(socketId) {
-  console.log('leave', socketId);
   const pc = pcPeers[socketId];
+  pc.removeStream(localStream);
   pc.close();
   delete pcPeers[socketId];
 
@@ -193,7 +193,7 @@ function leave(socketId) {
 }
 
 function setSocket() {
-  socket = io.connect(WEBRTC_SERVER, {transports: ['websocket']});
+  socket = io.connect(WEBRTC_SERVER, {transports: ['websocket'], 'forceNew':true });
   socket.on('exchange', function (data) {
     exchange(data);
   });
@@ -207,6 +207,7 @@ function setSocket() {
 
   let promise = new Promise((resolve, reject) => {
     socket.on('connect', function (data) {
+
       getLocalStream(false, function(stream) {
         localStream = stream;
         container.setState({selfViewSrc: stream.toURL()});
@@ -244,7 +245,7 @@ export default class StreamPublisher extends Component {
   componentDidMount() {
     container = this;
     setSocket().then(()=>{
-      join(roomId);
+      join(this.props.channel._id);
       globalClose = this.close.bind(this);
     });
   }
@@ -265,17 +266,20 @@ export default class StreamPublisher extends Component {
   }
 
   close() {
+    for (const id in pcPeers) {
+      leave(id)
+    }
+
     if (localStream) {
-      for (const id in pcPeers) {
-        const pc = pcPeers[id];
-        pc && pc.removeStream(localStream);
-      }
-      localStream.release();
-      localStream = undefined;
+
+      localStream.getTracks().forEach((track) => {
+        localStream.removeTrack(track);
+        track.stop();
+      });
     }
 
     socket.disconnect();
-    socket.close()
+    socket.close();
     Meteor.call('removeChannel', this.props.channel._id);
     container.props.navigator.replace({name: 'map'});
   }
@@ -285,7 +289,8 @@ export default class StreamPublisher extends Component {
       <View style={styles.container}>
 
       {this.showMessage.apply(this)}
-        <RTCView streamURL={this.state.selfViewSrc} style={styles.video}/>
+
+    <RTCView streamURL={this.state.selfViewSrc} style={styles.video}/>
   <Button
     style={styles.button}
     textStyle={styles.buttonText}

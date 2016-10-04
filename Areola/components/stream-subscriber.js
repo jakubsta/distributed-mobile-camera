@@ -40,10 +40,9 @@ var configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 const pcPeers = {};
 let localStream;
 let remoteStream;
-
+let a = false;
 function getLocalStream(isFront, callback) {
   MediaStreamTrack.getSources(sourceInfos => {
-    console.log(sourceInfos);
     let videoSourceId;
     for (const i = 0; i < sourceInfos.length; i++) {
       const sourceInfo = sourceInfos[i];
@@ -63,7 +62,6 @@ function getLocalStream(isFront, callback) {
 }
 
 function join(roomID) {
-  console.log('join')
   socket.emit('join', roomID, function(socketIds){
     for (const i in socketIds) {
       const socketId = socketIds[i];
@@ -77,7 +75,6 @@ function createPC(socketId, isOffer) {
   pcPeers[socketId] = pc;
 
   pc.onicecandidate = function (event) {
-    console.log('onicecandidate', event.candidate);
     if (event.candidate) {
       socket.emit('exchange', {'to': socketId, 'candidate': event.candidate });
     }
@@ -85,9 +82,7 @@ function createPC(socketId, isOffer) {
 
   function createOffer() {
     pc.createOffer(function(desc) {
-      console.log('createOffer', desc);
       pc.setLocalDescription(desc, function () {
-        console.log('setLocalDescription', pc.localDescription);
         socket.emit('exchange', {'to': socketId, 'sdp': pc.localDescription });
       }, logError);
     }, logError);
@@ -112,7 +107,6 @@ function createPC(socketId, isOffer) {
   };
 
   pc.onaddstream = function (event) {
-    console.log('onaddstream')
     container.setState({remoteStream: event.stream.toURL()});
     container.setState({remoteSocketId: socketId});
 
@@ -157,24 +151,19 @@ function exchange(data) {
   if (fromId in pcPeers) {
     pc = pcPeers[fromId];
   } else {
-    console.log('createPC')
     pc = createPC(fromId, false);
   }
 
   if (data.sdp) {
-    console.log('exchange sdp', data);
     pc.setRemoteDescription(new RTCSessionDescription(data.sdp), function () {
       if (pc.remoteDescription.type == "offer")
         pc.createAnswer(function(desc) {
-          console.log('createAnswer', desc);
           pc.setLocalDescription(desc, function () {
-            console.log('setLocalDescription', pc.localDescription);
             socket.emit('exchange', {'to': fromId, 'sdp': pc.localDescription });
           }, logError);
         }, logError);
     }, logError);
   } else {
-    console.log('exchange candidate', data);
     pc.addIceCandidate(new RTCIceCandidate(data.candidate));
   }
 }
@@ -191,7 +180,7 @@ function leave(socketId) {
 }
 
 function setSocket() {
-  socket = io.connect(WEBRTC_SERVER, {transports: ['websocket']});
+  socket = io.connect(WEBRTC_SERVER, {transports: ['websocket'], 'forceNew':true});
   socket.on('exchange', function (data) {
     exchange(data);
   });
@@ -247,7 +236,7 @@ class StreamSubscriber extends Component {
   componentDidMount() {
     container = this;
     setSocket().then(()=>{
-      join(roomId);
+      join(this.props.channel._id);
       globalClose = this.close.bind(this);
     });
   }
@@ -275,16 +264,22 @@ class StreamSubscriber extends Component {
   }
 
   close() {
+    a = false;
     if (localStream) {
-      for (const id in pcPeers) {
-        const pc = pcPeers[id];
-        pc && pc.removeStream(localStream);
-      }
-      localStream.release();
-    }
 
+      localStream.getTracks().forEach((track) => {
+        localStream.removeTrack(track);
+        track.stop();
+      });
+      localStream.active = false;
+
+      for (const id in pcPeers) {
+        leave(id)
+      }
+
+    }
     socket.disconnect();
-    socket.close()
+    socket.close();
     Meteor.call('removeChannel', this.props.channel._id);
     container.props.navigator.replace({name: 'map'});
   }
